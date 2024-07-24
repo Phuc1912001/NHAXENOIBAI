@@ -1,0 +1,16 @@
+.containerGroupIcon {
+  position: fixed;
+  bottom: 20px; /* Điều chỉnh khoảng cách dưới */
+  right: 20px; /* Điều chỉnh khoảng cách phải */
+  .iconWithShadow {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); /* Giảm kích thước và độ mờ của bóng đổ */
+    border-radius: 50%; /* Thêm border-radius nếu bạn muốn bóng đổ mềm mại hơn */
+    cursor: pointer;
+    margin-bottom: 5px;
+  }
+  .iconWithShadowMesage {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); /* Giảm kích thước và độ mờ của bóng đổ */
+    border-radius: 50%; /* Thêm border-radius nếu bạn muốn bóng đổ mềm mại hơn */
+    cursor: pointer;
+  }
+}
