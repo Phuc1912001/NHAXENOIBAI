@@ -1,0 +1,33 @@
+.wrapperLogo {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px;
+  .mainTitle {
+    font-size: 18px;
+    font-weight: bold;
+    color: #00aaff; /* Màu xanh sáng */
+    // background: linear-gradient(to right, #00aaff, #88eaff);
+    background-color: #00aaff;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mainTitle::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(
+      to right,
+      transparent,
+      rgba(255, 255, 255, 0.982),
+      transparent
+    );
+    animation: shine 2s infinite;
+  }
+}

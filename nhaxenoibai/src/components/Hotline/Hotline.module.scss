@@ -1,0 +1,95 @@
+.containerHotline {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  border-radius: 8px;
+  padding: 0px 8px 0px 8px;
+  border: 1px solid rgb(241, 67, 67);
+  cursor: pointer;
+
+  .textPhone {
+    font-weight: 600;
+    color: black; /* Đổi màu chữ cho dễ đọc */
+  }
+}
+
+.containerHotline img {
+  animation: ring 2s infinite; /* Thay đổi tên animation */
+  transform-origin: bottom; /* Chỉ định điểm gốc của chuyển đổi là phần trên bên trái */
+}
+
+@keyframes ring {
+  0% {
+    transform: rotate(0);
+  }
+  1% {
+    transform: rotate(10deg);
+  }
+  3% {
+    transform: rotate(-10deg);
+  }
+  5% {
+    transform: rotate(12deg);
+  }
+  7% {
+    transform: rotate(-12deg);
+  }
+  9% {
+    transform: rotate(10deg);
+  }
+  11% {
+    transform: rotate(-10deg);
+  }
+  13% {
+    transform: rotate(8deg);
+  }
+  15% {
+    transform: rotate(-8deg);
+  }
+  17% {
+    transform: rotate(6deg);
+  }
+  19% {
+    transform: rotate(-6deg);
+  }
+  21% {
+    transform: rotate(4deg);
+  }
+  23% {
+    transform: rotate(-4deg);
+  }
+  25% {
+    transform: rotate(2deg);
+  }
+  27% {
+    transform: rotate(-2deg);
+  }
+  29% {
+    transform: rotate(1deg);
+  }
+  31% {
+    transform: rotate(-1deg);
+  }
+  33% {
+    transform: rotate(0.5deg);
+  }
+  35% {
+    transform: rotate(-0.5deg);
+  }
+  37% {
+    transform: rotate(0.2deg);
+  }
+  39% {
+    transform: rotate(-0.2deg);
+  }
+  41% {
+    transform: rotate(0);
+  }
+
+  43% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(0);
+  } /* Rest of the time, no rotation */
+}
