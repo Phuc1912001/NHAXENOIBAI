@@ -35,3 +35,61 @@ body {
   border-radius: 5px; /* Độ cong của mép thanh trượt */
   border: 2px solid #f5f5f5; /* Viền bao quanh thanh trượt */
 }
+
+.nxsb-border-table.ant-table-wrapper {
+  .ant-table-content {
+    border: 1px solid #e6e7e8;
+    border-radius: 6px;
+  }
+
+  .ant-table-placeholder .ant-table-cell {
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+  }
+
+  .ant-table {
+    border-radius: 6px;
+  }
+
+  .ant-table-tbody > tr {
+    &:last-of-type {
+      > td {
+        border-bottom: 0px;
+      }
+    }
+  }
+}
+
+.nxsb-one-rows,
+.nxsb-two-rows,
+.nxsb-three-rows,
+.nxsb-four-rows {
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
+}
+
+.nxsb-one-rows {
+  -webkit-line-clamp: 1;
+}
+
+.nxsb-two-rows {
+  -webkit-line-clamp: 2;
+}
+
+.nxsb-three-rows {
+  -webkit-line-clamp: 3;
+}
+
+.nxsb-four-rows {
+  -webkit-line-clamp: 4;
+}
+
+.singleLineText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

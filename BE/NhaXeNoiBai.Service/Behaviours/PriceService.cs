@@ -48,5 +48,20 @@ namespace NhaXeNoiBai.Service.Behaviours
             var result = _mapper.Map<PriceModel>(entity);
             return result;
         }
+
+        public async Task<PriceModel> UpdatePrice(PriceModel priceModel)
+        {
+            var priceEntity = _mapper.Map<PriceEntity>(priceModel);
+            var entity = await _priceRepositoryService.UpdatePrice(priceEntity);
+            var result = _mapper.Map<PriceModel>(entity);
+            return result;
+
+        }
+
+        public async Task<bool> DeletePrice(Guid id)
+        {
+            var result = await _priceRepositoryService.DeletePrice(id);
+            return result;
+        }
     }
 }

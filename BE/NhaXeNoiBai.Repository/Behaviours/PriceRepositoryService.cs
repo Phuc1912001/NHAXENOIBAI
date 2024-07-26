@@ -48,11 +48,37 @@ namespace NhaXeNoiBai.Repository.Behaviours
             return result ?? new();
         }
 
-        public Task<PriceEntity> UpdatePrice(PriceEntity priceEntity)
+        public async Task<PriceEntity> UpdatePrice(PriceEntity price)
         {
-            throw new NotImplementedException();
+            var existingEntity = await _context.PriceEntities.FindAsync(price.Id);
+            if (existingEntity == null)
+            {
+                throw new KeyNotFoundException("Price entity not found");
+            }
+
+            existingEntity.CarType = price.CarType;
+            existingEntity.FromHanoiToNoiBai = price.FromHanoiToNoiBai;
+            existingEntity.FromNoiBaiToHanoi = price.FromNoiBaiToHanoi;
+            existingEntity.ToWay = price.ToWay;
+            existingEntity.UpdateAt = DateTime.Now;
+            _context.PriceEntities.Update(existingEntity);  
+            await _context.SaveChangesAsync();
+            return existingEntity;
         }
 
-        
+        public async Task<bool> DeletePrice(Guid id)
+        {
+            var entity = await _context.PriceEntities.FindAsync(id);
+            if (entity == null)
+            {
+                return false;
+            }
+
+            _context.PriceEntities.Remove(entity);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+
     }
 }

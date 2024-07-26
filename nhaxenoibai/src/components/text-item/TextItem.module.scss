@@ -1,0 +1,67 @@
+.dtComptReporttextitem {
+  display: flex;
+  color: #333333;
+  margin-bottom: 4px;
+
+  .greyedOutLabel {
+    color: #aaaaaa !important;
+    background-color: #eaeff4;
+  }
+
+  .greyedOutText {
+    color: #aaaaaa !important;
+  }
+
+  :global {
+    .nxsb-compt-reporttextitem-label {
+      background: #eaeff4;
+      padding: 7px 8px;
+      font-weight: 600;
+      line-height: 19px;
+      border-radius: 4px;
+      width: 9.375rem;
+      font-size: 0.875rem;
+      color: #333333;
+    }
+
+    .nxsb-compt-reporttextitem-text {
+      flex: 1;
+      padding: 7px 8px;
+      word-break: break-word;
+      line-height: 20px;
+      font-size: 0.875rem;
+      padding-right: 24px;
+      color: #333333;
+    }
+  }
+}
+
+@include media-breakpoint-down(md) {
+  .nxsbComptReporttextitem {
+    :global {
+      .nxsb-compt-reporttextitem-label {
+        width: 9.375rem;
+      }
+    }
+  }
+}
+
+@include media-breakpoint-between(md, lg) {
+  .nxsbComptReporttextitem {
+    :global {
+      .nxsb-compt-reporttextitem-label {
+        width: 7.5rem;
+      }
+    }
+  }
+}
+
+@include media-breakpoint-up(xxl) {
+  .nxsbComptReporttextitem {
+    :global {
+      .nxsb-compt-reporttextitem-label {
+        width: 256px;
+      }
+    }
+  }
+}

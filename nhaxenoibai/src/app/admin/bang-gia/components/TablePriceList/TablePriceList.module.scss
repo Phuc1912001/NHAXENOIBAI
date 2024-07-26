@@ -1,0 +1,11 @@
+.pcTable {
+  margin-top: 20px;
+}
+.title {
+  font-weight: 600;
+  color: #018fe1;
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
+}

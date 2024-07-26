@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { forwardRef, useImperativeHandle, useState } from "react";
 import styles from "./CreatePricePanel.module.scss";
 import { Button, Drawer, Form, Input, Modal } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
@@ -7,34 +7,58 @@ import { useUnsavedChanges } from "@/common/hook/useUnsavedChanges";
 import ModalDiscard from "@/components/ModalDiscard/ModalDiscard";
 import service from "@/common/service/apis";
 import { useLoading } from "@/common/context/useLoading";
+import { PanelRef } from "../../priceList.model";
+import { Price } from "@/common/service/models/Price";
+import { useNotification } from "@/components/Notification/useNotification";
 
 interface ICreatePricePanel {
-  openPanelCreate: boolean;
-  handleClosePanel: () => void;
+  getListPrice: () => void;
 }
 
-const CreatePricePanel = (props: ICreatePricePanel) => {
-  const { openPanelCreate, handleClosePanel } = props;
+const CreatePricePanel = (
+  props: ICreatePricePanel,
+  ref: React.Ref<PanelRef>
+) => {
+  const { getListPrice } = props;
   const [form] = useForm();
+  const [isOpen, setIsOpenPanel] = useState<boolean>(false);
   const { isDirty, handleFormChange, setIsDirty } = useUnsavedChanges(
     form,
-    openPanelCreate
+    isOpen
   );
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [type, setType] = useState<string>("Create");
+  const [selectedData, setSelectedData] = useState<Price.PriceModel>();
+  const notification = useNotification();
+
   const { showLoading, closeLoading } = useLoading();
+
+  useImperativeHandle(ref, () => ({
+    openPanel,
+  }));
+
+  const openPanel = (data?: Price.PriceModel, type?: string) => {
+    setIsOpenPanel(true);
+    setType(type ?? "Create");
+    if (data) {
+      form.setFieldsValue(data);
+      setSelectedData(data);
+    }
+  };
 
   const handleClose = () => {
     if (isDirty) {
       setIsModalVisible(true);
     } else {
-      handleClosePanel();
+      setIsOpenPanel(false);
+      form.resetFields();
     }
   };
 
   const handleDiscard = () => {
     form.resetFields();
     setIsDirty(false);
-    handleClosePanel();
+    setIsOpenPanel(false);
     setIsModalVisible(false);
   };
 
@@ -47,10 +71,25 @@ const CreatePricePanel = (props: ICreatePricePanel) => {
       showLoading("createPrice");
       await form.validateFields();
       const model = form.getFieldsValue();
-      await service.price.createPrice(model);
+
+      const modelEdit: Price.PriceModel = {
+        id: selectedData?.id,
+        ...model,
+      };
+      if (type === "Create") {
+        await service.price.createPrice(model);
+      } else {
+        await service.price.UpdatePrice(modelEdit);
+      }
+      type === "Create"
+        ? notification.success("Tạo thành công.")
+        : notification.success("Sửa thành công.");
+
+      getListPrice();
       form.resetFields();
       setIsDirty(false);
-      handleClosePanel();
+      setIsOpenPanel(false);
+
       closeLoading("createPrice");
     } catch (error) {
       closeLoading("createPrice");
@@ -60,9 +99,17 @@ const CreatePricePanel = (props: ICreatePricePanel) => {
   return (
     <div>
       <Drawer
-        title={<span style={{ color: "#12161B" }}>Tạo Giá Xe</span>}
+        title={
+          <span style={{ color: "#12161B" }}>{`${
+            type === "View"
+              ? "Xem Giá Xe"
+              : type === "Create"
+              ? "Tạo Giá Xe"
+              : "Sửa Giá Xe"
+          }`}</span>
+        }
         destroyOnClose
-        open={openPanelCreate}
+        open={isOpen}
         placement="right"
         maskClosable={false}
         closable={false}
@@ -72,61 +119,73 @@ const CreatePricePanel = (props: ICreatePricePanel) => {
             <Button style={{ marginRight: "8px" }} onClick={handleClose}>
               Đóng
             </Button>
-            <Button type="primary" onClick={handleSubmit}>
-              Tạo Giá Xe
-            </Button>
+            {type === "Create" ? (
+              <Button type="primary" onClick={handleSubmit}>
+                Tạo Giá Xe
+              </Button>
+            ) : (
+              type === "Edit" && (
+                <Button type="primary" onClick={handleSubmit}>
+                  Sửa Giá Xe
+                </Button>
+              )
+            )}
           </div>
         }
         width={520}
       >
-        <Form layout="vertical" form={form} onValuesChange={handleFormChange}>
-          <Form.Item
-            rules={[{ required: true, message: "Vui lòng điền loại xe." }]}
-            name="carType"
-            label="Loại Xe :"
-          >
-            <Input maxLength={200} />
-          </Form.Item>
+        {type === "Create" || type === "Edit" ? (
+          <Form layout="vertical" form={form} onValuesChange={handleFormChange}>
+            <Form.Item
+              rules={[{ required: true, message: "Vui lòng điền loại xe." }]}
+              name="carType"
+              label="Loại Xe :"
+            >
+              <Input maxLength={200} />
+            </Form.Item>
 
-          <Form.Item
-            rules={[
-              {
-                required: true,
-                message: "Vui lòng điền giá Hà Nội -> Nội Bài.",
-              },
-            ]}
-            name="fromHanoiToNoiBai"
-            label="Hà Nội -> Nội Bài:"
-          >
-            <Input maxLength={200} />
-          </Form.Item>
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng điền giá Hà Nội -> Nội Bài.",
+                },
+              ]}
+              name="fromHanoiToNoiBai"
+              label="Hà Nội -> Nội Bài:"
+            >
+              <Input maxLength={200} />
+            </Form.Item>
 
-          <Form.Item
-            rules={[
-              {
-                required: true,
-                message: "Vui lòng điền giá Nội Bài -> Hà Nội.",
-              },
-            ]}
-            name="fromNoiBaiToHanoi"
-            label="Nội Bài -> Hà Nội :"
-          >
-            <Input maxLength={200} />
-          </Form.Item>
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng điền giá Nội Bài -> Hà Nội.",
+                },
+              ]}
+              name="fromNoiBaiToHanoi"
+              label="Nội Bài -> Hà Nội :"
+            >
+              <Input maxLength={200} />
+            </Form.Item>
 
-          <Form.Item
-            rules={[
-              {
-                required: true,
-                message: "Vui lòng điền giá hai chiều.",
-              },
-            ]}
-            name="toWay"
-            label="Hai Chiều :"
-          >
-            <Input maxLength={200} />
-          </Form.Item>
-        </Form>
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng điền giá hai chiều.",
+                },
+              ]}
+              name="toWay"
+              label="Hai Chiều :"
+            >
+              <Input maxLength={200} />
+            </Form.Item>
+          </Form>
+        ) : (
+          <div>view</div>
+        )}
       </Drawer>
       <ModalDiscard
         openModal={isModalVisible}
@@ -137,4 +196,4 @@ const CreatePricePanel = (props: ICreatePricePanel) => {
   );
 };
 
-export default CreatePricePanel;
+export default forwardRef(CreatePricePanel);

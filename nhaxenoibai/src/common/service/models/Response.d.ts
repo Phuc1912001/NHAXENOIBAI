@@ -5,7 +5,7 @@ declare namespace Response {
     state?: ResponseState;
     statusCode?: number;
     message?: string;
-    data?: A;
+    result?: A;
     prameter?: A;
   }
 }

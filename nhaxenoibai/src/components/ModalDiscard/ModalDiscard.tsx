@@ -25,6 +25,9 @@ const ModalDiscard = (props: IModalDiscard) => {
         }
         zIndex={1001}
         width={415}
+        centered
+        destroyOnClose
+        onCancel={handleStay}
         footer={
           <div className={styles.wrapperButton}>
             <Button onClick={handleDiscard}>Bỏ qua</Button>

@@ -1,23 +1,39 @@
-import React from "react";
+"use client";
 import {
   AppstoreAddOutlined,
-  AppstoreOutlined,
   AuditOutlined,
   BarChartOutlined,
-  MailOutlined,
   ReconciliationOutlined,
   RollbackOutlined,
-  SettingOutlined,
   TruckOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Menu } from "antd";
-import styles from "./LeftNav.module.scss";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import React, { useCallback, useEffect, useState } from "react";
+import styles from "./LeftNav.module.scss";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
 const LeftNav: React.FC = () => {
+  const pathName = usePathname();
+
+  // Determine initial selectedKey based on pathName
+  const getSelectedKey = useCallback(() => {
+    if (pathName.startsWith("/admin/dat-xe")) return ["2"];
+    if (pathName.startsWith("/admin/bang-gia")) return ["3"];
+    if (pathName.startsWith("/admin/khuyen-mai")) return ["4"];
+    if (pathName.startsWith("/admin/chinh-sach")) return ["5"];
+    return ["1"]; // Default key if none of the conditions match
+  }, [pathName]);
+
+  const [selectedKey, setSelectedKey] = useState<string[]>(getSelectedKey);
+
+  useEffect(() => {
+    setSelectedKey(getSelectedKey());
+  }, [getSelectedKey]);
+
   const items: MenuItem[] = [
     {
       key: "1",
@@ -53,16 +69,11 @@ const LeftNav: React.FC = () => {
       icon: <RollbackOutlined />,
     },
   ];
-  const onClick: MenuProps["onClick"] = (e) => {
-    console.log("click ", e);
-  };
 
   return (
     <Menu
       className={styles.LeftNav}
-      onClick={onClick}
-      //   style={{ width: 256 }}
-      defaultSelectedKeys={["1"]}
+      selectedKeys={selectedKey} // Use selectedKeys instead of defaultSelectedKeys
       mode="inline"
       items={items}
     />

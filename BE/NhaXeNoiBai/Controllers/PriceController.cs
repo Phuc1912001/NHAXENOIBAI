@@ -32,5 +32,17 @@ namespace NhaXeNoiBai.Controllers
             return await this.Handle(_logger, () => _priceService.CreatePrice(model));  
         }
 
+        [HttpPost("UpdatePrice")]
+        public async Task<BaseResponse<PriceModel>> UpdatePrice( PriceModel model)
+        {
+            return await this.Handle(_logger,() => _priceService.UpdatePrice(model));
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<BaseResponse<bool>> DeletePrice ( Guid id )
+        {
+            return await this.Handle(_logger, () => _priceService.DeletePrice(id));
+        }
+
     }
 }
