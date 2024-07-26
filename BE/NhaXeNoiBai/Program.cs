@@ -7,6 +7,7 @@ using NhaXeNoiBai.Service.Behaviours;
 using NhaXeNoiBai.Service.Interfaces;
 using AutoMapper;
 using NhaXeNoiBai.Model.Mapper;
+using Amazon.S3;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,11 +19,17 @@ builder.Services.AddDbContext<TranportDBContext>(option =>
 });
 builder.Services.AddScoped<IPriceService, PriceService>();
 builder.Services.AddScoped<IPriceRepositoryService, PriceRepositoryService>();
+builder.Services.AddScoped<IDoccumentService, DoccumentService>();   
+builder.Services.AddScoped<IDoccumentRepositoryService, DoccumentRepositoryService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
+builder.Services.AddAWSService<IAmazonS3>();
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
+
+
 
 var app = builder.Build();
 

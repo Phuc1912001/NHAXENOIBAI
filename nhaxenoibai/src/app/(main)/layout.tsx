@@ -1,8 +1,9 @@
+import GroupIcons from "@/components/GroupIcons/GroupIcons";
+import Header from "@/components/Header/Header";
+import StyledComponentsRegistry from "@/lib/AntdRegistry";
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/Header/Header";
-import GroupIcons from "@/components/GroupIcons/GroupIcons";
 
 const outfit = Outfit({ subsets: ["latin"] });
 
@@ -20,13 +21,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={outfit.className}>
-        <div>
-          <Header />
-        </div>
-        <div className="mt-24 p-5">
-          <div>{children}</div>
-          <GroupIcons />
-        </div>
+        <StyledComponentsRegistry>
+          <div>
+            <Header />
+          </div>
+          <div className="mt-24 p-5">
+            <div>{children}</div>
+            <GroupIcons />
+          </div>
+        </StyledComponentsRegistry>
       </body>
     </html>
   );

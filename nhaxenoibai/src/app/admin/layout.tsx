@@ -1,6 +1,6 @@
 "use client";
 import { LoadingProvider } from "@/common/context/useLoading";
-import { AntdRegistry } from "@ant-design/nextjs-registry";
+import StyledComponentsRegistry from "@/lib/AntdRegistry";
 import { Outfit } from "next/font/google";
 import { FC } from "react";
 import LayoutAdmin from "./Components/LayoutAdmin/LayoutAdmin";
@@ -16,11 +16,11 @@ const RootLayout: FC<RootLayoutProps> = ({ children }) => {
   return (
     <html lang="en">
       <body className={outfit.className}>
-        <AntdRegistry>
+        <StyledComponentsRegistry>
           <LoadingProvider>
             <LayoutAdmin>{children}</LayoutAdmin>
           </LoadingProvider>
-        </AntdRegistry>
+        </StyledComponentsRegistry>
       </body>
     </html>
   );

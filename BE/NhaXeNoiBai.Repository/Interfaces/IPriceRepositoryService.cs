@@ -12,8 +12,8 @@ namespace NhaXeNoiBai.Repository.Interfaces
     {
         Task<BaseDataCollection<PriceEntity>> GetListPrice(DataGridModel model);
         Task<PriceEntity> CreatePrice(PriceEntity price);
-        Task<PriceEntity> UpdatePrice(PriceEntity priceEntity);  
-
+        Task<PriceEntity> UpdatePrice(PriceEntity price);
+        Task<bool> DeletePrice(Guid id);
 
     }
 }

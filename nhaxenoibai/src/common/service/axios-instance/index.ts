@@ -3,8 +3,8 @@ import { Modal } from "antd";
 import axios from "axios";
 
 const apiUrl = "https://localhost:7053/api";
-const user: A = cookie.getCookie("userLogin") ?? "{}";
-const token = JSON.parse(user)?.token ?? "";
+// const user: A = cookie.getCookie("userLogin") ?? "{}";
+// const token = JSON.parse(user)?.token ?? "";
 const source = axios.CancelToken.source();
 
 const instance = axios.create({
@@ -21,7 +21,7 @@ const instance = axios.create({
 // Request Interceptor
 instance.interceptors.request.use(
   (config) => {
-    config.headers.Authorization = `Bearer ${token}`;
+    // config.headers.Authorization = `Bearer ${token}`;
     return config;
   },
   (error) => {
@@ -40,7 +40,7 @@ instance.interceptors.response.use(
         title: "Unauthorized",
         content: "Your session has expired. Please log in again.",
         onOk: () => {
-          cookie.clearCookie("userLogin");
+          // cookie.clearCookie("userLogin");
           location.href = "/login";
         },
       });
