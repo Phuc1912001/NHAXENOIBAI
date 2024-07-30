@@ -1,0 +1,52 @@
+.statusTag {
+  margin-right: 0;
+  font-size: 13px;
+  line-height: 20px;
+  padding-inline: 4px;
+  border-radius: 3px;
+  border: 1px solid;
+  width: fit-content;
+
+  .statusTag-block-manager {
+    max-width: 96px;
+  }
+}
+.statusTag-ads-ad {
+  max-width: 117px;
+}
+.statusTag-after-ads-ad {
+  max-width: 117px;
+}
+
+.statusTag-adj-panel {
+  max-width: 123px;
+  word-break: break-word;
+  white-space: normal;
+}
+
+.statusTag-head-home {
+  min-width: max-content;
+
+  max-width: 125px;
+  min-width: inherit;
+  word-break: break-word;
+  white-space: normal;
+}
+
+.statusTag-youth-ack {
+  min-width: max-content;
+
+  width: 125px;
+  min-width: inherit;
+  word-break: break-word;
+  white-space: normal;
+}
+
+.statusTag-compelete-action {
+  min-width: max-content;
+
+  width: 125px;
+  min-width: inherit;
+  word-break: break-word;
+  white-space: normal;
+}

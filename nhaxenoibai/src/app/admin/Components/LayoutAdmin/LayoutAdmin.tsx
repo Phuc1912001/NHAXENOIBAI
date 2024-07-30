@@ -1,3 +1,5 @@
+"use client";
+
 import { Affix, Layout } from "antd";
 import React from "react";
 import LeftNav from "../LeftNav/LeftNav";

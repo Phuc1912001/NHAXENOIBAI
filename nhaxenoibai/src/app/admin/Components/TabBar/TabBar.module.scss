@@ -1,0 +1,16 @@
+.wrapperTabBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  .wrapperRightSide {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .wrapperLeftSide {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+}

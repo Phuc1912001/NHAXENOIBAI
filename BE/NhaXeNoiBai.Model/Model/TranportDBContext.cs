@@ -16,6 +16,9 @@ namespace NhaXeNoiBai.Model.Model
         }
         public DbSet<PriceEntity> PriceEntities { get; set; }
         public DbSet<DocumentEntity> DocumentEntities { get; set; }
+        public DbSet<DiscountEntity> DiscountEntities { get; set; }
+        public DbSet<DiscountCodeEntity> DiscountCodeEntities { get; set; }
+        public DbSet<MoneyEntity> MoneyEntities { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);

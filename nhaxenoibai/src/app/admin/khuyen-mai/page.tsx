@@ -1,21 +1,26 @@
 "use client";
-import React, { useRef } from "react";
+import { useRef } from "react";
 import styles from "./discount.module.scss";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { Button } from "antd";
-import { PanelRef } from "../bang-gia/priceList.model";
+import CreateDiscountPanel from "./components/CreateDiscountPanel/CreateDiscountPanel";
+import { PanelRef } from "./discount.model";
 
-const page = () => {
-  // const panelRef = useRef<PanelRef>(null);
+const Page = () => {
+  const panelRef = useRef<PanelRef>(null);
 
-  // const openPanel = (data?: A, type?: string) => {
-  //   panelRef.current?.openPanel(data, type);
-  // };
+  const openPanel = (data?: A, type?: string) => {
+    panelRef.current?.openPanel(data, type);
+  };
+
   return (
     <div>
-      <Button icon={<PlusCircleOutlined />}>Tạo Khuyễn Mãi</Button>
+      <Button icon={<PlusCircleOutlined />} onClick={() => openPanel()}>
+        Tạo Khuyến Mãi
+      </Button>
+      <CreateDiscountPanel ref={panelRef} />
     </div>
   );
 };
 
-export default page;
+export default Page;

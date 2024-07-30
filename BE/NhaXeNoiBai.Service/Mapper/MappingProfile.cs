@@ -15,6 +15,15 @@ namespace NhaXeNoiBai.Model.Mapper
         {
             CreateMap<PriceEntity, PriceModel>();
             CreateMap<PriceModel,PriceEntity>();
+
+            CreateMap<DiscountEntity, DiscountModel>();
+            CreateMap<DiscountModel, DiscountEntity>();
+
+            CreateMap<DiscountCodeEntity, DiscountCodeModel>();
+            CreateMap<DiscountCodeModel, DiscountCodeEntity>();
+
+            CreateMap<MoneyEntity, MoneyModel>();
+            CreateMap<MoneyModel, MoneyEntity>();
         }
     }
 }

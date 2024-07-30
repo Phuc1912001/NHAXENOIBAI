@@ -3,6 +3,8 @@ import {
   AppstoreAddOutlined,
   AuditOutlined,
   BarChartOutlined,
+  DollarOutlined,
+  FallOutlined,
   ReconciliationOutlined,
   RollbackOutlined,
   TruckOutlined,
@@ -24,7 +26,9 @@ const LeftNav: React.FC = () => {
     if (pathName.startsWith("/admin/dat-xe")) return ["2"];
     if (pathName.startsWith("/admin/bang-gia")) return ["3"];
     if (pathName.startsWith("/admin/khuyen-mai")) return ["4"];
-    if (pathName.startsWith("/admin/chinh-sach")) return ["5"];
+    if (pathName.startsWith("/admin/ma-giam-gia")) return ["5"];
+    if (pathName.startsWith("/admin/so-tien-giam")) return ["6"];
+    if (pathName.startsWith("/admin/chinh-sach")) return ["7"];
     return ["1"]; // Default key if none of the conditions match
   }, [pathName]);
 
@@ -57,6 +61,16 @@ const LeftNav: React.FC = () => {
     },
     {
       key: "5",
+      label: <Link href="/admin/ma-giam-gia">Mã Giảm Giá</Link>,
+      icon: <FallOutlined />,
+    },
+    {
+      key: "6",
+      label: <Link href="/admin/so-tien-giam">Số tiền giảm</Link>,
+      icon: <DollarOutlined />,
+    },
+    {
+      key: "7",
       label: <Link href="/admin/chinh-sach">Chính sách</Link>,
       icon: <AuditOutlined />,
     },
@@ -64,7 +78,7 @@ const LeftNav: React.FC = () => {
       type: "divider",
     },
     {
-      key: "6",
+      key: "8",
       label: <Link href="/">Trở về</Link>,
       icon: <RollbackOutlined />,
     },

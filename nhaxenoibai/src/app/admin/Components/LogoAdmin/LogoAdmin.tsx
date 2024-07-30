@@ -7,7 +7,7 @@ const LogoAdmin = () => {
   return (
     <div className={styles.wrapperLogo}>
       <Image src={logoAdmin} alt="logo admin" width={60} height={60} />
-      <div className={styles.mainTitle}>Nhà Xe Sân Bay</div>
+      <div className={styles.mainTitle}>Nhà Xe Nội Bài</div>
     </div>
   );
 };

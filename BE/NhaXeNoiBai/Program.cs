@@ -8,6 +8,7 @@ using NhaXeNoiBai.Service.Interfaces;
 using AutoMapper;
 using NhaXeNoiBai.Model.Mapper;
 using Amazon.S3;
+using NhaXeNoiBai.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,13 @@ builder.Services.AddScoped<IPriceService, PriceService>();
 builder.Services.AddScoped<IPriceRepositoryService, PriceRepositoryService>();
 builder.Services.AddScoped<IDoccumentService, DoccumentService>();   
 builder.Services.AddScoped<IDoccumentRepositoryService, DoccumentRepositoryService>();
+builder.Services.AddScoped<IDiscountService, DiscountService>();
+builder.Services.AddScoped<IDiscountRepositoryService, DiscountRepositoryService>();
+builder.Services.AddScoped<IDiscountCodeService, DiscountCodeService>();
+builder.Services.AddScoped<IDiscountCodeRepositoryService, DiscountCodeRespositoryService>();
+builder.Services.AddScoped<IMoneyService, MoneyService>();
+builder.Services.AddScoped<IMoneyRepositoryService, MoneyRepositoryService>();
+builder.Services.AddHostedService<DiscountCodeBackgroundService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
