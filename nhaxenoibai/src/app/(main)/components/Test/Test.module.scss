@@ -1,0 +1,185 @@
+.containerHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 15px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #ffffff;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  .wrapperLeft {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    .wrapperLogo {
+      display: flex;
+      align-items: center;
+    }
+    .logoTextContainer {
+      margin-left: 10px;
+    }
+
+    .mainTitle {
+      font-size: 24px;
+      font-weight: bold;
+      color: #00aaff; /* Màu xanh sáng */
+      // background: linear-gradient(to right, #00aaff, #88eaff);
+      background-color: #00aaff;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mainTitle::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(
+        to right,
+        transparent,
+        rgba(255, 255, 255, 0.5),
+        transparent
+      );
+      animation: shine 2s infinite;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #a8a8a8; /* Màu xám nhạt */
+    }
+
+    @keyframes shine {
+      0% {
+        left: -100%;
+      }
+      50% {
+        left: 100%;
+      }
+      100% {
+        left: 100%;
+      }
+    }
+  }
+
+  .wrapperItem {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    .itemHome {
+      padding: 0px 10px 0px 5px;
+      height: 44px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      &:hover {
+        background-color: #dcf7ff;
+      }
+    }
+    .activeHome {
+      background-color: #dcf7ff;
+    }
+    .itemPrice {
+      padding: 0px 10px 0px 5px;
+      height: 44px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      &:hover {
+        background-color: #ffe3f2;
+      }
+    }
+    .activePrice {
+      background-color: #ffe3f2;
+    }
+
+    .itemDiscount {
+      padding: 0px 10px 0px 10px;
+      height: 44px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+
+      &:hover {
+        background-color: #ffeedf;
+      }
+    }
+
+    .activeDiscount {
+      background-color: #ffeedf;
+    }
+
+    .itemPolicy {
+      padding: 0px 10px 0px 10px;
+      height: 44px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      &:hover {
+        background-color: #f9f1ff;
+      }
+    }
+
+    .activePolicy {
+      background-color: #f9f1ff;
+    }
+  }
+
+  .wrapperAvatar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+}
+
+.wrapperContent {
+  .wrapperCart {
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    border-radius: 5px;
+    &:hover {
+      background-color: #dcf7ff;
+    }
+  }
+  .wrapperLogout {
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    position: relative; /* Thêm thuộc tính position */
+    transition: transform 0.3s ease; /* Độ trễ và hiệu ứng chuyển động */
+    border-radius: 5px;
+    &:hover {
+      background-color: #dcf7ff;
+      .iconLogout {
+        margin-left: 20px; /* Di chuyển sang phải 15px khi hover */
+      }
+    }
+
+    .iconLogout {
+      transition: margin-left 0.3s ease; /* Hiệu ứng di chuyển khoảng cách */
+    }
+  }
+}

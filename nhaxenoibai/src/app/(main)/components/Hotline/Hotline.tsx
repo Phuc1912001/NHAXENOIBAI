@@ -2,7 +2,7 @@ import React from "react";
 import { message } from "antd";
 import styles from "./Hotline.module.scss";
 import Image from "next/image";
-import iconPhone from "../../common/assets/iconPhone.png";
+import iconPhone from "@/common/assets/iconPhone.png";
 
 const Hotline = () => {
   const handleCopyText = () => {

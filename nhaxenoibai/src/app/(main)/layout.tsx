@@ -1,10 +1,9 @@
-import GroupIcons from "@/components/GroupIcons/GroupIcons";
-import Header from "@/components/Header/Header";
-import StyledComponentsRegistry from "@/lib/AntdRegistry";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
+import DefaultLayout from "./DefaultLayout";
 import "./globals.css";
-
+import { ConfigProvider } from "antd";
 const outfit = Outfit({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -21,15 +20,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={outfit.className}>
-        <StyledComponentsRegistry>
-          <div>
-            <Header />
-          </div>
-          <div className="mt-24 p-5">
-            <div>{children}</div>
-            <GroupIcons />
-          </div>
-        </StyledComponentsRegistry>
+        <AntdRegistry>
+          <DefaultLayout>{children}</DefaultLayout>
+        </AntdRegistry>
       </body>
     </html>
   );

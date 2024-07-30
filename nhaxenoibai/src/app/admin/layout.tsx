@@ -5,6 +5,7 @@ import { Outfit } from "next/font/google";
 import { FC } from "react";
 import LayoutAdmin from "./Components/LayoutAdmin/LayoutAdmin";
 import "./globals.css";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
 
 const outfit = Outfit({ subsets: ["latin"] });
 
@@ -16,11 +17,11 @@ const RootLayout: FC<RootLayoutProps> = ({ children }) => {
   return (
     <html lang="en">
       <body className={outfit.className}>
-        <StyledComponentsRegistry>
+        <AntdRegistry>
           <LoadingProvider>
             <LayoutAdmin>{children}</LayoutAdmin>
           </LoadingProvider>
-        </StyledComponentsRegistry>
+        </AntdRegistry>
       </body>
     </html>
   );
