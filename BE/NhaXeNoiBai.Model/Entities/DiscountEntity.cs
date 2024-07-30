@@ -9,7 +9,7 @@ namespace NhaXeNoiBai.Model.Entities
     public class DiscountEntity:BaseEntity
     {
         public string? Title { get; set; }
-        public int? DiscountNumber { get; set; }
+        public string? DiscountNumber { get; set; }
         public string? Description { get; set; }    
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set;}

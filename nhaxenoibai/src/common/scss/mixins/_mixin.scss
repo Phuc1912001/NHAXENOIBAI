@@ -1,0 +1,234 @@
+@mixin generate-spacing($prefix, $property) {
+  $sizes: 0, 2, 4, 8, 12, 16, 24, 32, 48, 64, 96;
+  $spacing: 0.0625rem;
+
+  @for $i from 1 through length($sizes) {
+    $size: nth($sizes, $i);
+
+    .#{$prefix}-#{$size} {
+      #{$property}: $spacing * $size !important;
+    }
+  }
+
+  .#{$prefix}-auto {
+    #{$property}: auto !important;
+  }
+}
+
+@mixin generate-spacing-plus($prefix, $property1, $property2) {
+  $sizes: 0, 2, 4, 8, 12, 16, 24, 32, 48, 64, 96;
+  $spacing: 0.0625rem;
+
+  @for $i from 1 through length($sizes) {
+    $size: nth($sizes, $i);
+
+    .#{$prefix}-#{$size} {
+      #{$property1}: $spacing * $size !important;
+      #{$property2}: $spacing * $size !important;
+    }
+  }
+
+  .#{$prefix}-auto {
+    #{$property1}: auto !important;
+    #{$property2}: auto !important;
+  }
+}
+
+/* generate display class */
+@mixin generate-display() {
+  $displays: none, inline, inline-block, block, table, table-row, table-cell,
+    flex, inline-flex, grid;
+
+  @for $i from 1 through length($displays) {
+    $value: nth($displays, $i);
+
+    .dt-#{$value} {
+      display: $value;
+    }
+  }
+}
+
+/* generate position class */
+@mixin generate-position() {
+  $position: static, relative, absolute, fixed, sticky;
+
+  @for $i from 1 through length($position) {
+    $value: nth($position, $i);
+
+    .dt-#{$value} {
+      position: $value;
+    }
+  }
+}
+
+/* generate flex or grid utils class */
+// @mixin generate-flex-grid-utils() {
+//     $justify-key: normal, start, end, center, between, around, evenly, stretch;
+//     $justify-value: normal, flex-start, flex-end, center, space-between, space-around, space-evenly, stretch;
+
+//     @for $i from 1 through length($justify-key) {
+//         $key: nth($justify-key, $i);
+//         $value: nth($justify-value, $i);
+
+//         .dt-justify-#{$key} {
+//             justify-content: $value;
+//         }
+//     }
+
+//     $wrap-value: wrap, wrap-reverse, nowrap;
+
+//     @for $i from 1 through length($wrap-value) {
+//         $value: nth($wrap-value, $i);
+
+//         .dt-flex-#{$value} {
+//             flex-wrap: $value;
+//         }
+//     }
+// }
+
+/* Media breakpoint */
+@function breakpoint-min($name, $breakpoints: $grid-breakpoints) {
+  $min: map-get($breakpoints, $name);
+  @return if($min !=0, $min, null);
+}
+
+@function breakpoint-max($name, $breakpoints: $grid-breakpoints) {
+  $max: map-get($breakpoints, $name);
+  @return if($max and $max > 0, $max - 1, null);
+}
+
+@function breakpoint-next(
+  $name,
+  $breakpoints: $grid-breakpoints,
+  $breakpoint-names: map-keys($breakpoints)
+) {
+  $n: index($breakpoint-names, $name);
+  @return if(
+    $n !=null and $n < length($breakpoint-names),
+    nth($breakpoint-names, $n + 1),
+    null
+  );
+}
+
+@mixin media-breakpoint-down($name, $breakpoints: $grid-breakpoints) {
+  $max: breakpoint-max($name, $breakpoints);
+
+  @if $max {
+    @media (max-width: $max) {
+      @content;
+    }
+  } @else {
+    @content;
+  }
+}
+
+@mixin media-breakpoint-down-contain($name, $breakpoints: $grid-breakpoints) {
+  $max: breakpoint-min($name, $breakpoints);
+
+  @if $max {
+    @media (max-width: $max) {
+      @content;
+    }
+  } @else {
+    @content;
+  }
+}
+
+@mixin media-breakpoint-up($name, $breakpoints: $grid-breakpoints) {
+  $min: breakpoint-min($name, $breakpoints);
+
+  @if $min {
+    @media (min-width: $min) {
+      @content;
+    }
+  } @else {
+    @content;
+  }
+}
+
+@mixin media-breakpoint-between(
+  $lower,
+  $upper,
+  $breakpoints: $grid-breakpoints
+) {
+  $min: breakpoint-min($lower, $breakpoints);
+  $max: breakpoint-max($upper, $breakpoints);
+
+  @if $min !=null and $max !=null {
+    @media (min-width: $min) and (max-width: $max) {
+      @content;
+    }
+  } @else if $max ==null {
+    @include media-breakpoint-up($lower, $breakpoints) {
+      @content;
+    }
+  } @else if $min ==null {
+    @include media-breakpoint-down($upper, $breakpoints) {
+      @content;
+    }
+  }
+}
+
+@mixin media-breakpoint-between-noend(
+  $lower,
+  $upper,
+  $breakpoints: $grid-breakpoints
+) {
+  $min: breakpoint-min($lower, $breakpoints);
+  $max: breakpoint-max($upper, $breakpoints);
+
+  @if $min !=null and $max !=null {
+    @media (min-width: $min) and (max-width: $max) {
+      @content;
+    }
+  } @else if $max ==null {
+    @include media-breakpoint-up($lower, $breakpoints) {
+      @content;
+    }
+  } @else if $min ==null {
+    @include media-breakpoint-down($upper, $breakpoints) {
+      @content;
+    }
+  }
+}
+
+@mixin media-breakpoint-only($name, $breakpoints: $grid-breakpoints) {
+  $min: breakpoint-min($name, $breakpoints);
+  $next: breakpoint-next($name, $breakpoints);
+  $max: breakpoint-max($next);
+
+  @if $min !=null and $max !=null {
+    @media (min-width: $min) and (max-width: $max) {
+      @content;
+    }
+  } @else if $max ==null {
+    @include media-breakpoint-up($name, $breakpoints) {
+      @content;
+    }
+  } @else if $min ==null {
+    @include media-breakpoint-down($next, $breakpoints) {
+      @content;
+    }
+  }
+}
+
+// responsive classes (desktop first)
+@mixin generate-responsive-utils() {
+  $screen-key: xs, sm, md, lg, xl, xxl;
+  $screen-value: 0, 576px, 744px, 1133px, 1280px, 1680px;
+  $display-key: inline, block, contents, flex, grid, inline-block, inline-flex,
+    inline-grid, inline-table, none, initial, inherit, table;
+
+  @each $s-key in $screen-key {
+    $s-index: index($screen-key, $s-key);
+    $s-value: nth($screen-value, $s-index);
+
+    @each $d-key in $display-key {
+      .dt-#{$s-key}-#{$d-key} {
+        @media screen and (max-width: $s-value) {
+          display: $d-key !important;
+        }
+      }
+    }
+  }
+}

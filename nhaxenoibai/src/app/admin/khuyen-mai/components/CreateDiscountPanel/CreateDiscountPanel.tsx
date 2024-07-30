@@ -1,6 +1,6 @@
 import React, { forwardRef, useImperativeHandle, useState } from "react";
 import styles from "./CreateDiscountPanel.module.scss";
-import { Button, Drawer, Form, Input } from "antd";
+import { Button, DatePicker, Drawer, Form, Input, Select } from "antd";
 import { PanelRef } from "../../discount.model";
 import { CloseOutlined } from "@ant-design/icons";
 import { useForm } from "antd/es/form/Form";
@@ -9,9 +9,18 @@ import { useLoading } from "@/common/context/useLoading";
 import { useNotification } from "@/components/Notification/useNotification";
 import { Discount } from "@/common/service/models/Discount";
 import ModalDiscard from "@/components/ModalDiscard/ModalDiscard";
+import service from "@/common/service/apis";
+import { Money } from "@/common/service/models/Money";
+import dayjs from "dayjs";
+import TextArea from "antd/es/input/TextArea";
 
 interface ICreateDiscountPanel {
   // getListDiscount: () => void;
+}
+
+interface IOptionValue {
+  label?: string;
+  value?: string | number;
 }
 
 const CreateDiscountPanel = (
@@ -31,20 +40,45 @@ const CreateDiscountPanel = (
     isOpen
   );
 
+  const [optionMoney, setOptionMoney] = useState<IOptionValue[]>([]);
+
+  const getFullListMoney = async () => {
+    try {
+      showLoading("GetFullListMoney");
+      const { result } = await service.money.getFullListMoney();
+      let newData = result.baseDatas.map((item: Money.MoneyModel) => ({
+        label: item.title,
+        value: item.id,
+      }));
+      setOptionMoney(newData);
+      closeLoading("GetFullListMoney");
+    } catch (error) {
+      closeLoading("GetFullListMoney");
+    }
+  };
+
   useImperativeHandle(ref, () => ({
     openPanel,
   }));
 
   const openPanel = (data?: Discount.DiscountModel, type?: string) => {
-    console.log("type", type);
-
     setIsOpenPanel(true);
     setType(type ?? "Create");
     if (data) {
-      form.setFieldsValue(data);
+      const dataDiscountCode = {
+        ...data,
+        startTime: dayjs(data.startTime),
+        endTime: dayjs(data.endTime),
+      };
+
+      form.setFieldsValue(dataDiscountCode);
       setSelectedData(data);
     }
+    if (type !== "View") {
+      getFullListMoney();
+    }
   };
+
   const handleClose = () => {
     if (isDirty) {
       setIsModalVisible(true);
@@ -56,31 +90,37 @@ const CreateDiscountPanel = (
 
   const handleSubmit = async () => {
     try {
-      showLoading("createDiscount");
+      showLoading("CreateDiscount");
       await form.validateFields();
       const model = form.getFieldsValue();
-
-      const modelEdit: Discount.DiscountModel = {
-        id: selectedData?.id,
+      const createModel: Discount.DiscountModel = {
         ...model,
+        startTime: dayjs(model.startTime).format(),
+        endTime: dayjs(model.endTime).format(),
       };
-      //   if (type === "Create") {
-      //     await service.price.createPrice(model);
-      //   } else {
-      //     await service.price.UpdatePrice(modelEdit);
-      //   }
+      const modelEdit: Discount.DiscountModel = {
+        ...model,
+        id: selectedData?.id,
+        startTime: dayjs(model.startTime).format(),
+        endTime: dayjs(model.endTime).format(),
+      };
+      if (type === "Create") {
+        await service.discountCode.createDiscountCode(createModel);
+      } else {
+        await service.discountCode.updateDiscountCode(modelEdit);
+      }
       type === "Create"
         ? notification.success("Tạo thành công.")
         : notification.success("Sửa thành công.");
 
-      //   getListPrice();
+      // getDiscountCode();
       form.resetFields();
       setIsDirty(false);
       setIsOpenPanel(false);
 
-      closeLoading("createDiscount");
+      closeLoading("CreateDiscount");
     } catch (error) {
-      closeLoading("createDiscount");
+      closeLoading("CreateDiscount");
     }
   };
 
@@ -94,6 +134,10 @@ const CreateDiscountPanel = (
   const handleStay = () => {
     setIsModalVisible(false);
   };
+
+  const filterOption = (input: string, option?: IOptionValue) =>
+    (option?.label ?? "").toLowerCase().includes(input.toLowerCase()) ||
+    ((option as any)?.email || "").toLowerCase().includes(input.toLowerCase());
 
   return (
     <div>
@@ -120,12 +164,12 @@ const CreateDiscountPanel = (
             </Button>
             {type === "Create" ? (
               <Button type="primary" onClick={handleSubmit}>
-                Tạo Giá Xe
+                Tạo Khuyến Mãi
               </Button>
             ) : (
               type === "Edit" && (
                 <Button type="primary" onClick={handleSubmit}>
-                  Sửa Giá Xe
+                  Sửa Khuyến Mãi
                 </Button>
               )
             )}
@@ -136,50 +180,83 @@ const CreateDiscountPanel = (
         {type === "Create" || type === "Edit" ? (
           <Form layout="vertical" form={form} onValuesChange={handleFormChange}>
             <Form.Item
-              rules={[{ required: true, message: "Vui lòng điền loại xe." }]}
-              name="carType"
-              label="Loại Xe :"
+              rules={[
+                { required: true, message: "Vui lòng điền mã giảm giá." },
+              ]}
+              name="title"
+              label="Tên khuyến mãi:"
             >
-              <Input maxLength={200} />
+              <TextArea maxLength={2000} />
+            </Form.Item>
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng điền số tiền giảm.",
+                },
+              ]}
+              name="discountCodeNumber"
+              label="Số tiền giảm:"
+            >
+              <Select
+                rootClassName={styles.emFilterSelectMultiple}
+                placeholder="Chọn loại số tiền"
+                options={optionMoney}
+                showSearch
+                filterOption={filterOption}
+              />
             </Form.Item>
 
             <Form.Item
               rules={[
                 {
                   required: true,
-                  message: "Vui lòng điền giá Hà Nội -> Nội Bài.",
+                  message: "Vui lòng điền thời gian bắt đầu.",
                 },
               ]}
-              name="fromHanoiToNoiBai"
-              label="Hà Nội -> Nội Bài:"
+              name="startTime"
+              label="Thời gian bắt đầu :"
             >
-              <Input maxLength={200} />
+              <DatePicker
+                // format="DD MMM YYYY"
+                inputReadOnly={true}
+                placeholder="chọn ngày bắt đầu"
+                showTime
+                showHour
+                showMinute
+              />
             </Form.Item>
 
             <Form.Item
               rules={[
                 {
                   required: true,
-                  message: "Vui lòng điền giá Nội Bài -> Hà Nội.",
+                  message: "Vui lòng điền thời gian kết thúc.",
                 },
               ]}
-              name="fromNoiBaiToHanoi"
-              label="Nội Bài -> Hà Nội :"
+              name="endTime"
+              label="Thời gian kết thúc :"
             >
-              <Input maxLength={200} />
+              <DatePicker
+                // format="DD MMM YYYY"
+                inputReadOnly={true}
+                placeholder="Chọn ngày kết thúc"
+                showTime
+                showHour
+                showMinute
+              />
             </Form.Item>
-
             <Form.Item
               rules={[
                 {
                   required: true,
-                  message: "Vui lòng điền giá hai chiều.",
+                  message: "Vui lòng điền mô tả .",
                 },
               ]}
-              name="toWay"
-              label="Hai Chiều :"
+              name="description"
+              label="Mô tả:"
             >
-              <Input maxLength={200} />
+              <TextArea maxLength={2000} />
             </Form.Item>
           </Form>
         ) : (

@@ -31,15 +31,6 @@ namespace NhaXeNoiBai.Service.Behaviours
         }
         public async Task<DiscountCodeModel> CreateDiscountCode(DiscountCodeModel discountCode)
         {
-            DateTime now = DateTime.UtcNow;
-            if (now > discountCode.StartTime && now < discountCode.EndTime)
-            {
-                discountCode.Status = (int)DiscountCodeStatusEnum.Active;
-            }
-            else
-            {
-                discountCode.Status = (int)DiscountCodeStatusEnum.PendingActive;
-            }
             var discountCodeEntity = _mapper.Map<DiscountCodeEntity>(discountCode);
             var entity = await _discountCodeRepositoryService.CreateDiscountCode(discountCodeEntity);
             var result = _mapper.Map<DiscountCodeModel>(entity);
@@ -104,6 +95,12 @@ namespace NhaXeNoiBai.Service.Behaviours
                 code.Status = (int)DiscountCodeStatusEnum.Active;
                 await _discountCodeRepositoryService.UpdateDiscountCodeAsync(code);
             }
+        }
+
+        public async Task<DiscountCodeFilterModel> GetListFilterDiscountCode()
+        {
+            var result = await _discountCodeRepositoryService.GetListFilterDiscountCode();
+            return result;
         }
     }
 }

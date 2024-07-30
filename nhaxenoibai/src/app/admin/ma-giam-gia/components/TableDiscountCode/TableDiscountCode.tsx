@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./TableDiscountCode.module.scss";
 import { DiscountCode } from "@/common/service/models/DiscountCode";
-import { Button, Table } from "antd";
+import { Button, Table, Tooltip } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
@@ -32,9 +32,21 @@ const TableDiscountCode = (props: ITableDiscountCode) => {
       title: "Mã Giảm giá",
       dataIndex: "title",
       key: "title",
+      width: "20%",
       render: (_, record) => (
-        <div onClick={() => openPanel(record, "View")} className={styles.title}>
-          {record.title}
+        <div className={styles.wrapperTitle}>
+          <div></div>
+          <Tooltip
+            title={<div className={styles.customTooltip}>{record?.title}</div>}
+            color={"#fff"}
+          >
+            <span
+              onClick={() => openPanel(record, "View")}
+              className={`${styles.title}`}
+            >
+              {record.title}
+            </span>
+          </Tooltip>
         </div>
       ),
     },

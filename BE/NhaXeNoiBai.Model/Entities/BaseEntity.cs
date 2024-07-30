@@ -11,7 +11,7 @@ namespace NhaXeNoiBai.Model.Entities
     {
         [Key]
         public Guid Id { get; set; }
-        public DateTime CreateAt { get; set; } = DateTime.Now;
+        public DateTime CreateAt { get; set; } 
         public DateTime UpdateAt { get; set; }
     }
 }

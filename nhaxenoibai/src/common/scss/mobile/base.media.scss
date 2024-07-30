@@ -1,0 +1,35 @@
+// Mobile Phones, less than 744px, 0 to 743px
+@include media-breakpoint-down(md) {
+}
+
+//Portrait Ipad Mini, 744px to 1132px
+@include media-breakpoint-between(md, lg) {
+}
+
+//Landscape Ipad Mini, 1133px to 1279px
+@include media-breakpoint-between(lg, xl) {
+}
+
+//Laptop 1920*1080 150% resize, 1280px to 1679px
+@include media-breakpoint-between(xl, xxl) {
+}
+
+//Laptop high resolution, 1680px and up
+@include media-breakpoint-up(xxl) {
+}
+
+//less than 1133px, 0 to 1132px
+@include media-breakpoint-down(lg) {
+}
+
+//1133px and up
+@include media-breakpoint-up(lg) {
+}
+
+//breakpoint = 1133px
+@include media-breakpoint-only(lg) {
+}
+
+//less than 1134px, 0 to 1133px,
+@include media-breakpoint-down-contain(lg) {
+}

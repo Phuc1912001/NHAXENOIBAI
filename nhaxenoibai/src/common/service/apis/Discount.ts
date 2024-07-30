@@ -2,7 +2,7 @@ import axiosInstance from "../axios-instance/index";
 import { DiscountCode } from "../models/DiscountCode";
 
 export const discountCode = {
-  async createDiscountCode(
+  async createDiscount(
     discountCode: DiscountCode.DiscountCodeModel
   ): Promise<Response.IDefaultResponse> {
     try {

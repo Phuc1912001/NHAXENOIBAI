@@ -10,4 +10,15 @@ declare namespace DiscountCode {
     endTime?: string;
     status?: number;
   }
+
+  export interface MoneyFilterOptionModel {
+    value?: string;
+    label?: string;
+    money?: number;
+  }
+
+  export interface DiscountCodeFilterModel {
+    status: number[];
+    moneyFilters: MoneyFilterOptionModel[];
+  }
 }
