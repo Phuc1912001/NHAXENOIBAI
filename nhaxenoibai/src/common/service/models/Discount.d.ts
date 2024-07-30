@@ -4,8 +4,8 @@ declare namespace Discount {
   export interface DiscountModel extends BaseModel {
     title?: string;
     description?: string;
-    StartTime?: string;
-    EndTime?: string;
-    Status?: number;
+    startTime?: string;
+    endTime?: string;
+    status?: number;
   }
 }

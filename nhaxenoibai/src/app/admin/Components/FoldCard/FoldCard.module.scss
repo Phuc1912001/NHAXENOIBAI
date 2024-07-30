@@ -1,0 +1,75 @@
+.nxnbCard {
+  :global {
+    .nxnb-card-header {
+      // height: 40px;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #e7ecef;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      min-height: 40px;
+      margin-bottom: 8px;
+      .nxnb-card-left {
+        display: flex;
+        align-items: center;
+        position: relative;
+        margin-bottom: 8px;
+        .cardTitle {
+          font-size: 16px;
+          font-weight: 600;
+          line-height: 22px;
+        }
+        &::after {
+          content: "";
+          position: absolute;
+          bottom: -10px;
+          left: 0;
+          right: 0;
+          height: 3px;
+          background: #00aaff;
+        }
+      }
+      .nxnb-card-right {
+        display: flex;
+        align-items: center;
+        font-weight: 500;
+        .upIcon {
+          margin-left: 1rem;
+          color: #4b5566;
+        }
+      }
+      &:hover {
+        .nxnb-card-left {
+          .cardTitle {
+            color: #00aaff;
+          }
+        }
+      }
+      &:active {
+        background-color: #0000000f;
+      }
+    }
+    .nxnbNoBoderCard {
+      border-bottom: none;
+      justify-content: start;
+      .nxnb-card-left {
+        .cardTitle {
+          color: #00aaff;
+          font-size: $f14;
+        }
+        &::after {
+          content: none;
+        }
+      }
+      .nxnb-card-right {
+        .upIcon {
+          margin-left: 10px;
+          color: #00aaff;
+        }
+      }
+    }
+    .nxnb-card-con {
+      padding: 8px 0px;
+    }
+  }
+}

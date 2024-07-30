@@ -1,0 +1,80 @@
+$font-family: "Poppins", sans-serif !default;
+
+$size1: 0.0625rem !default;
+$font-base: $size1 * 16;
+$f12: $font-base * 0.75 !default;
+$f13: $font-base * 0.8125 !default;
+$f14: $font-base * 0.875 !default;
+$f16: $font-base * 1 !default;
+$f18: $font-base * 1.125 !default;
+$f20: $font-base * 1.25 !default;
+$f24: $font-base * 1.5 !default;
+$f28: $font-base * 1.75 !default;
+$f32: $font-base * 2 !default;
+
+//font weight variables
+$fw300: 300 !default;
+$fw400: 400 !default;
+$fw600: 600 !default;
+$fw700: 700 !default;
+
+//line height variables
+$lh1: 1 !default;
+$lh125: 1.25 !default;
+$lh15: 1.5 !default;
+$lh2: 2 !default;
+
+//padding margin variables
+$s4: 0.25rem;
+$s8: 0.5rem;
+$s14: 0.875rem;
+$s16: 1rem;
+$s20: 1.25rem;
+$s24: 1.5rem;
+$s32: 2rem;
+$s40: 2.5rem;
+$s48: 3rem;
+$s64: 4rem;
+$s72: 4.5rem;
+
+// border-radius-variables
+$br: 0.5rem !default;
+$br4: 0.25rem !default;
+$br8: 0.5rem !default;
+$br20: 1.25rem !default;
+
+// resonsive breakpoints
+$grid-breakpoints: (
+  xs: 0,
+  zf: 345px,
+  sm: 576px,
+  md: 744px,
+  ipadAir: 820px,
+  ipadPro: 1024px,
+  lg: 1133px,
+  xl: 1280px,
+  xxl: 1680px,
+) !default;
+
+// color variables
+$red: #df1820 !default;
+$information: #0072d0;
+$warning: #e5681f;
+$error: #d01b1b;
+$successful: #02a56f;
+$border-disable: #d9d9d9;
+
+//background color-variables
+$gray: #e6e7e8 !default;
+
+// font color-variables
+$text-primary: #323130 !default;
+$link-color: #df1820 !default;
+$text-default: #333333;
+$text-secondary: #4b5566;
+$color-default: #0052a6;
+$color-primary: #27a2db;
+$color-sub: #00b8cd;
+
+// border color-variables
+$border-color-base: #8d8f94 !default;

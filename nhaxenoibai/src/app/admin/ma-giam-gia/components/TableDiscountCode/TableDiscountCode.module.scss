@@ -1,0 +1,33 @@
+.wrapperTitle {
+  display: flex;
+  align-items: center;
+  .title {
+    font-size: 14px;
+    line-height: 19px;
+    font-weight: 600;
+    color: #00aaff;
+    word-break: break-word;
+    text-overflow: ellipsis;
+    display: -webkit-box !important;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
+    &:active a {
+      color: #00aaff;
+    }
+  }
+
+  @include media-breakpoint-down(md) {
+    .title {
+      color: red;
+    }
+  }
+}
+
+.customTooltip {
+  color: #222222;
+}

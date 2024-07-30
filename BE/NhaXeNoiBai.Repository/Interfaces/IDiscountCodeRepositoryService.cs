@@ -11,6 +11,7 @@ namespace NhaXeNoiBai.Repository.Interfaces
     public interface IDiscountCodeRepositoryService
     {
         Task<BaseDataCollection<DiscountCodeEntity>> GetListDiscountCode(DataGridModel model);
+        Task<DiscountCodeFilterModel> GetListFilterDiscountCode();
 
         Task<DiscountCodeEntity> CreateDiscountCode(DiscountCodeEntity entity);
         Task<DiscountCodeEntity> UpdateDiscountCode(DiscountCodeEntity entity);

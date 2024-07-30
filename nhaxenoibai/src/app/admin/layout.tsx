@@ -6,6 +6,8 @@ import { FC } from "react";
 import LayoutAdmin from "./Components/LayoutAdmin/LayoutAdmin";
 import "./globals.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
+import { DeviceProvider } from "@/common/context/useDevice";
+import "@/common/scss/index.scss";
 
 const outfit = Outfit({ subsets: ["latin"] });
 
@@ -18,9 +20,11 @@ const RootLayout: FC<RootLayoutProps> = ({ children }) => {
     <html lang="en">
       <body className={outfit.className}>
         <AntdRegistry>
-          <LoadingProvider>
-            <LayoutAdmin>{children}</LayoutAdmin>
-          </LoadingProvider>
+          <DeviceProvider>
+            <LoadingProvider>
+              <LayoutAdmin>{children}</LayoutAdmin>
+            </LoadingProvider>
+          </DeviceProvider>
         </AntdRegistry>
       </body>
     </html>

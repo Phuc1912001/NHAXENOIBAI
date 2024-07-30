@@ -4,6 +4,10 @@ export interface PanelRefDiscountCode {
   openPanel: (data?: DiscountCode.DiscountCodeModel, type?: string) => void;
 }
 
+export interface PanelRefFilter {
+  handleOpenPanel: () => void;
+}
+
 export enum EDiscountStatus {
   PendingActive = 1,
   Active = 2,
@@ -31,3 +35,9 @@ export const EEventStatusProperties = {
     name: "expired",
   },
 };
+
+export interface IFilterDiscountCodeValue {
+  status: number[];
+  money: string[];
+  dateRange: string[];
+}

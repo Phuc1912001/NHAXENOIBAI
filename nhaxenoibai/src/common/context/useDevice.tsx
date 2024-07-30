@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   createContext,
   useCallback,
@@ -33,7 +34,6 @@ interface IDevice {
   fxos: () => boolean;
   fxosPhone: () => boolean;
   fxosTablet: () => boolean;
-
   landscape: () => boolean;
   portrait: () => boolean;
 }
@@ -62,11 +62,23 @@ export const DeviceProvider = (props: IProps) => {
     EDeviceOrientation.Landscape
   );
   const [os, setOs] = useState<EDeviceOs>(EDeviceOs.Windows);
-  const userAgent = window.navigator.userAgent.toLowerCase();
-  let orientationEvent = "resize";
-  if (Object.prototype.hasOwnProperty.call(window, "onorientationchange")) {
-    orientationEvent = "orientationchange";
-  }
+
+  // Check if `window` is defined
+  const isClient = typeof window !== "undefined";
+
+  // Initialize `userAgent` and `orientationEvent` only on client-side
+  const [userAgent, setUserAgent] = useState<string>("");
+  const [orientationEvent, setOrientationEvent] = useState<string>("resize");
+
+  useEffect(() => {
+    if (isClient) {
+      setUserAgent(window.navigator.userAgent.toLowerCase());
+      if (Object.prototype.hasOwnProperty.call(window, "onorientationchange")) {
+        setOrientationEvent("orientationchange");
+      }
+    }
+  }, [isClient]);
+
   const orientationRef = useRef<EDeviceOrientation>(
     EDeviceOrientation.Landscape
   );
@@ -74,12 +86,14 @@ export const DeviceProvider = (props: IProps) => {
   const includes = useCallback((haystack: string, needle: string) => {
     return haystack.indexOf(needle) !== -1;
   }, []);
+
   const find = useCallback(
     (needle: string) => {
       return includes(userAgent, needle);
     },
-    [userAgent]
+    [userAgent, includes]
   );
+
   const getDevice = useCallback(() => {
     const device: A = {};
     device.macos = function () {
@@ -179,7 +193,7 @@ export const DeviceProvider = (props: IProps) => {
       return window.innerHeight / window.innerWidth < 1;
     };
     return device as IDevice;
-  }, [find, includes]);
+  }, [find, includes, userAgent]);
 
   const setOrientationCache = () => {
     const device = getDevice();
@@ -194,7 +208,10 @@ export const DeviceProvider = (props: IProps) => {
       setOrientation(tempValue);
     }
   };
+
   useEffect(() => {
+    if (!isClient) return; // Return early if not in client-side
+
     const device = getDevice();
     let tempType: EDeviceType;
     let tempOs: EDeviceOs;
@@ -238,7 +255,7 @@ export const DeviceProvider = (props: IProps) => {
     return () => {
       window.removeEventListener(orientationEvent, setOrientationCache);
     };
-  }, []);
+  }, [isClient, getDevice, orientationEvent, os, type]);
 
   const scrollSelectChangeStaticScroll = (open?: boolean) => {
     if (type !== EDeviceType.Desktop) {

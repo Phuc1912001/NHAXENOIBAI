@@ -8,10 +8,17 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import TabBar from "../Components/TabBar/TabBar";
 import CreateDiscountCodePanel from "./components/CreateDiscountCodePanel/CreateDiscountCodePanel";
 import TableDiscountCode from "./components/TableDiscountCode/TableDiscountCode";
-import { PanelRefDiscountCode } from "./discountCode.model";
+import {
+  IFilterDiscountCodeValue,
+  PanelRefDiscountCode,
+  PanelRefFilter,
+} from "./discountCode.model";
+import DiscountCodeFilterPanel from "./components/DiscountCodeFilterPanel/DiscountCodeFilterPanel";
+import dayjs from "dayjs";
 
 const Page = () => {
   const panelRef = useRef<PanelRefDiscountCode>(null);
+  const filterRef = useRef<PanelRefFilter>(null);
   const { showLoading, closeLoading } = useLoading();
   const [dataDiscountCode, setDataDiscountCode] = useState<
     DiscountCode.DiscountCodeModel[]
@@ -21,6 +28,10 @@ const Page = () => {
   const [showModalDelete, setShowModalDelete] = useState<boolean>(false);
   const [currentRecord, setCurrentRecord] =
     useState<DiscountCode.DiscountCodeModel>();
+  const [dataFilterDiscountCode, setDataFilterDiscountCode] =
+    useState<DiscountCode.DiscountCodeFilterModel>();
+
+  const [filterValue, setFilterValue] = useState<IFilterDiscountCodeValue>();
 
   const notification = useNotification();
 
@@ -110,6 +121,76 @@ const Page = () => {
       closeLoading("DeleteDiscountCode");
     }
   };
+
+  const getFilterDiscountCode = async () => {
+    try {
+      showLoading("GetFilterDiscountCode");
+      const result = await service.discountCode.GetFilterDiscountCode();
+      setDataFilterDiscountCode(result);
+      closeLoading("GetFilterDiscountCode");
+    } catch {
+      closeLoading("GetFilterDiscountCode");
+    }
+  };
+
+  // Filter
+  const filter = (val: IFilterDiscountCodeValue) => {
+    let filterCondition: Common.FilterConditionModel[] = [];
+    if (val?.status?.length !== 0 && val?.status) {
+      filterCondition = [
+        ...filterCondition,
+        {
+          values: val?.status,
+          columnName: "Status",
+        },
+      ];
+    } else {
+      filterCondition = [...filterCondition];
+    }
+
+    if (val?.money?.length !== 0) {
+      filterCondition = [
+        ...filterCondition,
+        {
+          values: val?.money?.map(String),
+          columnName: "Money",
+        },
+      ];
+      console.log("filterCondition", filterCondition);
+    } else {
+      filterCondition = [...filterCondition];
+    }
+
+    filterCondition = [
+      ...filterCondition,
+      {
+        values: val?.dateRange?.map((item) => dayjs(item).format()),
+        columnName: "Date Range",
+      },
+    ];
+
+    setFilterValue(val);
+    setParam((currentParam) => {
+      return {
+        ...currentParam,
+        filterInfo: {
+          ...currentParam.filterInfo,
+          filterCondition: [...filterCondition],
+        },
+        pageInfo: {
+          pageSize: 10,
+          pageNo: 1,
+          total: 0,
+        },
+      };
+    });
+  };
+
+  const handleOpenFilter = () => {
+    getFilterDiscountCode();
+    filterRef.current?.handleOpenPanel();
+  };
+
   return (
     <div>
       <TabBar
@@ -117,6 +198,7 @@ const Page = () => {
         btnText="Tạo Mã giảm giá"
         placeholderSearch="Nhập mã giảm giá"
         onSearch={nameSearch}
+        handleOpenFilter={handleOpenFilter}
       />
       <TableDiscountCode
         openPanel={openPanel}
@@ -129,6 +211,12 @@ const Page = () => {
       <CreateDiscountCodePanel
         ref={panelRef}
         getDiscountCode={getDiscountCode}
+      />
+      <DiscountCodeFilterPanel
+        ref={filterRef}
+        filterValue={filterValue}
+        dataFilterDiscountCode={dataFilterDiscountCode}
+        filter={filter}
       />
       <ModalDelete
         title="Xóa mã giảm"

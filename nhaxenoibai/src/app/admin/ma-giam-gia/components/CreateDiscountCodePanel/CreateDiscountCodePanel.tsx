@@ -1,10 +1,13 @@
 "use client";
 import React, { forwardRef, useImperativeHandle, useState } from "react";
 import styles from "./CreateDiscountCodePanel.module.scss";
-import { PanelRefDiscountCode } from "../../discountCode.model";
+import {
+  EEventStatusProperties,
+  PanelRefDiscountCode,
+} from "../../discountCode.model";
 import { useForm } from "antd/es/form/Form";
 import { DiscountCode } from "@/common/service/models/DiscountCode";
-import { Button, DatePicker, Drawer, Form, Input, Select } from "antd";
+import { Button, DatePicker, Drawer, Form, Input, Row, Select } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import { useUnsavedChanges } from "@/common/hook/useUnsavedChanges";
 import ModalDiscard from "@/components/ModalDiscard/ModalDiscard";
@@ -13,6 +16,8 @@ import { useNotification } from "@/components/Notification/useNotification";
 import service from "@/common/service/apis";
 import { Money } from "@/common/service/models/Money";
 import dayjs from "dayjs";
+import TextItem from "@/app/admin/Components/text-item/TextItem";
+import Status from "@/components/Status/Status";
 
 interface ICreateDiscountCodePanel {
   getDiscountCode: () => void;
@@ -36,7 +41,7 @@ const CreateDiscountCodePanel = (
     form,
     isOpen
   );
-  const [selectedData, setselectedData] =
+  const [selectedData, setSelectedData] =
     useState<DiscountCode.DiscountCodeModel>();
   const [dataMoney, setDataMoney] = useState<Money.MoneyModel[]>([]);
   const [optionMoney, setOptionMoney] = useState<IOptionValue[]>([]);
@@ -74,7 +79,7 @@ const CreateDiscountCodePanel = (
       };
 
       form.setFieldsValue(dataDiscountCode);
-      setselectedData(data);
+      setSelectedData(data);
     }
     if (type !== "View") {
       getFullListMoney();
@@ -112,8 +117,10 @@ const CreateDiscountCodePanel = (
         endTime: dayjs(model.endTime).format(),
       };
       const modelEdit: DiscountCode.DiscountCodeModel = {
-        id: selectedData?.id,
         ...model,
+        id: selectedData?.id,
+        startTime: dayjs(model.startTime).format(),
+        endTime: dayjs(model.endTime).format(),
       };
       if (type === "Create") {
         await service.discountCode.createDiscountCode(createModel);
@@ -261,7 +268,33 @@ const CreateDiscountCodePanel = (
             </Form.Item>
           </Form>
         ) : (
-          <div>view</div>
+          <div>
+            {/* <Row> */}
+            <TextItem label="Mã Giảm giá" textItemProps={{ isCol: false }}>
+              {selectedData?.title}
+            </TextItem>
+            <TextItem label="Số tiền giảm" textItemProps={{ isCol: false }}>
+              {selectedData?.discountCodeTitle}
+            </TextItem>
+            <TextItem label="Ngày bắt đầu" textItemProps={{ isCol: false }}>
+              {dayjs(selectedData?.startTime).format("DD/MM/YYYY HH:mm")}
+            </TextItem>
+            <TextItem label="Ngày kết thúc" textItemProps={{ isCol: false }}>
+              {dayjs(selectedData?.endTime).format("DD/MM/YYYY HH:mm")}
+            </TextItem>
+            <TextItem label="Trạng thái" textItemProps={{ isCol: false }}>
+              <Status
+                data={EEventStatusProperties}
+                label={selectedData?.status ?? 1}
+              ></Status>
+            </TextItem>
+            <TextItem label="Thời gian tạo" textItemProps={{ isCol: false }}>
+              {dayjs(selectedData?.createAt).format("DD/MM/YYYY HH:mm")}
+            </TextItem>
+            <TextItem label="Thời gian sửa" textItemProps={{ isCol: false }}>
+              {dayjs(selectedData?.updateAt).format("DD/MM/YYYY HH:mm")}
+            </TextItem>
+          </div>
         )}
       </Drawer>
       <ModalDiscard
