@@ -81,6 +81,7 @@ namespace NhaXeNoiBai.Repository.Behaviours
 
             var now = DateTime.Now;
             entity.CreateAt = now;
+
             if (entity.StartTime <= now && now <= entity.EndTime)
             {
                 entity.Status = (int)DiscountCodeStatusEnum.Active;
@@ -158,7 +159,6 @@ namespace NhaXeNoiBai.Repository.Behaviours
         {
             var now = DateTime.Now;
 
-            var q1 = await _context.DiscountCodeEntities.ToListAsync();
             var query = await _context.DiscountCodeEntities
                  .Where(dc => dc.StartTime.HasValue
                               && dc.StartTime.Value < now

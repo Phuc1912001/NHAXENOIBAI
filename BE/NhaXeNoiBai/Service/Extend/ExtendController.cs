@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NhaXeNoiBai.Model.Enums;
+using NhaXeNoiBai.Model.Exceptions;
 using NhaXeNoiBai.Model.Model;
 
 namespace NhaXeNoiBai.Service.Extend
@@ -14,6 +16,7 @@ namespace NhaXeNoiBai.Service.Extend
                 result.Result = data;
                 result.State = ResponseState.Ok;
                 result.Message = "";
+
             }
             catch (Exception ex)
             {
@@ -23,11 +26,21 @@ namespace NhaXeNoiBai.Service.Extend
                 return new BaseResponse<T>
                 {
                     State = ResponseState.Error,
-                    Message = ex.Message
+                    Message = ex.Message,
+                    ErrorCode = (int)GetErrorCode(ex)
                 };
 
             }
             return result;
+        }
+
+        private static ErrorCode GetErrorCode(Exception e)
+        {
+            if (e is BaseException ex)
+            {
+                return (ErrorCode)ex.ErrorCode;
+            }
+            return ErrorCode.Unknow;
         }
     }
 }

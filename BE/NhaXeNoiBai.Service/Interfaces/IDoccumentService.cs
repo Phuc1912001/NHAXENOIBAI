@@ -12,6 +12,8 @@ namespace NhaXeNoiBai.Service.Interfaces
         Task<Guid> AddDocument(DocumentEntity document);
         Task<Guid> DeleteDocument(DocumentEntity document);
         Task<DocumentEntity> GetInforFileByRecordEntity(Guid recordId);
+        Task<bool> CheckFileInListDocument(string? recordId);
+
 
     }
 }

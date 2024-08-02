@@ -14,23 +14,12 @@ import { CloseOutlined } from "@ant-design/icons";
 import {
   EDiscountStatus,
   IFilterDiscountCodeValue,
+  IFilterDrawerSections,
   PanelRefFilter,
 } from "../../discountCode.model";
 import { DiscountCode } from "@/common/service/models/DiscountCode";
 import Card from "@/app/admin/Components/FoldCard/FoldCard";
 
-interface IFilterDrawerSections {
-  title?: string;
-  key?: string | number;
-  name?: string;
-  isDisplay: boolean;
-  render(
-    text?: A,
-    record?: IFilterDrawerSections,
-    index?: number,
-    columns?: IFilterDrawerSections[]
-  ): React.JSX.Element;
-}
 interface IDiscountCodeFilterPanel {
   dataFilterDiscountCode?: DiscountCode.DiscountCodeFilterModel;
   filterValue?: IFilterDiscountCodeValue;
@@ -162,23 +151,18 @@ const DiscountCodeFilterPanel = (
     },
   ];
   const onFinish = (val: IFilterDiscountCodeValue) => {
-    console.log(val);
-    console.log("alo");
-
     filter(val);
     setOpen(false);
   };
 
   const resetFilter = () => {
-    console.log("alo");
-
     form.resetFields();
   };
 
   const renderActionButton = () => {
     return (
       <div className={styles.wrapperFooter}>
-        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={handleClose}>Đóng</Button>
         <Button onClick={resetFilter}>Reset</Button>
         <Button
           type="primary"
@@ -186,7 +170,7 @@ const DiscountCodeFilterPanel = (
             form.submit();
           }}
         >
-          Apply
+          Áp Dụng
         </Button>
       </div>
     );

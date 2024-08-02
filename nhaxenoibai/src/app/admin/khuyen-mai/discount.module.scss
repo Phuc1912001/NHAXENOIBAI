@@ -1,0 +1,26 @@
+.wrapperNotice {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 24px;
+  margin-bottom: 16px;
+  padding: 8px 9px;
+  border: 1px solid #0072d0;
+  background-color: #eef7ff;
+  border-radius: 2px;
+
+  .infoIcon {
+    color: #0072d0;
+    font-size: 16px;
+    margin-top: 3px;
+  }
+
+  .text {
+    color: #222222;
+    font-size: 14px;
+
+    span {
+      font-weight: 600;
+    }
+  }
+}

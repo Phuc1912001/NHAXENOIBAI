@@ -9,6 +9,9 @@ const nextConfig = {
     `,
     includePaths: [path.resolve("./src/common/scss")],
   },
+  images: {
+    domains: ['nhaxesanbay.s3.amazonaws.com'],
+  },
 };
 
 export default nextConfig;

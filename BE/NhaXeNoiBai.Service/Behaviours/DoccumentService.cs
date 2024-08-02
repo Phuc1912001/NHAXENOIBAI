@@ -28,16 +28,24 @@ namespace NhaXeNoiBai.Service.Behaviours
             return result;
         }
 
+        public async Task<bool> CheckFileInListDocument(string? recordId)
+        {
+            var result = await _doccumentRepositoryService.CheckFileInListDocument(recordId);
+            return result;
+        }
+
         public async Task<Guid> DeleteDocument(DocumentEntity document)
         {
-            var result = await _doccumentRepositoryService.DeleteDocument(document);    
+            var result = await _doccumentRepositoryService.DeleteDocument(document);
             return result;
         }
 
         public async Task<DocumentEntity> GetInforFileByRecordEntity(Guid recordId)
         {
             var result = await _doccumentRepositoryService.GetInforFileByRecordEntity(recordId);
-            return result;  
+            return result;
         }
+
+        
     }
 }

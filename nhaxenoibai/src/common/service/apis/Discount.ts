@@ -1,14 +1,14 @@
 import axiosInstance from "../axios-instance/index";
-import { DiscountCode } from "../models/DiscountCode";
+import { Discount } from "../models/Discount";
 
-export const discountCode = {
+export const discount = {
   async createDiscount(
-    discountCode: DiscountCode.DiscountCodeModel
+    discount: Discount.DiscountModel
   ): Promise<Response.IDefaultResponse> {
     try {
       const response = await axiosInstance.post(
-        "/DiscountCode/CreateDiscountCode",
-        discountCode
+        "/Discount/CreateDiscount",
+        discount
       );
       return response.data;
     } catch (error) {
@@ -17,12 +17,12 @@ export const discountCode = {
     }
   },
 
-  async getDiscountCodeList(
+  async getDiscountList(
     model?: Common.DataGridModel
   ): Promise<Response.IDefaultResponse> {
     try {
       const response = await axiosInstance.post(
-        `/DiscountCode/GetListDiscountCode`,
+        `/Discount/GetListDiscount`,
         model
       );
       return response.data;
@@ -32,13 +32,13 @@ export const discountCode = {
     }
   },
 
-  async updateDiscountCode(
-    discountCode: DiscountCode.DiscountCodeModel
+  async updateDiscount(
+    discount: Discount.DiscountModel
   ): Promise<Response.IDefaultResponse> {
     try {
       const response = await axiosInstance.post(
-        `/DiscountCode/UpdateDiscountCode`,
-        discountCode
+        `/Discount/UpdateDiscount`,
+        discount
       );
       return response.data;
     } catch (error) {
@@ -47,9 +47,9 @@ export const discountCode = {
     }
   },
 
-  async DeleteDiscountCode(id: string): Promise<Response.IDefaultResponse> {
+  async deleteDiscount(id: string): Promise<Response.IDefaultResponse> {
     try {
-      const response = await axiosInstance.delete(`/DiscountCode/${id}`);
+      const response = await axiosInstance.delete(`/Discount/${id}`);
       return response.data;
     } catch (error) {
       console.error("An error occurred while adding the account:", error);
@@ -57,11 +57,18 @@ export const discountCode = {
     }
   },
 
-  async GetFilterDiscountCode() {
+  async getFilterDiscount() {
     try {
-      const response = await axiosInstance.get(
-        `/DiscountCode/GetFilterDiscountCode`
-      );
+      const response = await axiosInstance.get(`/Discount/getFilterDiscount`);
+      return response.data;
+    } catch (error) {
+      console.error("An error occurred while adding the account:", error);
+      throw error;
+    }
+  },
+  async getDiscountNotice() {
+    try {
+      const response = await axiosInstance.get(`/Discount/getNotice`);
       return response.data;
     } catch (error) {
       console.error("An error occurred while adding the account:", error);
