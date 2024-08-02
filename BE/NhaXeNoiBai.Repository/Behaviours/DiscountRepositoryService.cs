@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NhaXeNoiBai.Model.Entities;
 using NhaXeNoiBai.Model.Enums;
+using NhaXeNoiBai.Model.Exceptions;
+using NhaXeNoiBai.Model.Migrations;
 using NhaXeNoiBai.Model.Model;
 using NhaXeNoiBai.Repository.Interfaces;
 using System;
@@ -31,6 +33,17 @@ namespace NhaXeNoiBai.Repository.Behaviours
             var now = DateTime.Now;
             entity.CreateAt = now;
 
+            // Check for overlapping discount periods
+            bool isOverlapping = await _context.DiscountEntities
+                .AnyAsync(d => (d.StartTime < entity.EndTime && d.EndTime > entity.StartTime));
+
+            if (isOverlapping)
+            {
+                throw new DiscountException("Đã có chương trình khuyến mãi trong thời gian này");
+
+            }
+
+            // Set status based on the current time
             if (entity.StartTime <= now && now <= entity.EndTime)
             {
                 entity.Status = (int)DiscountCodeStatusEnum.Active;
@@ -43,12 +56,14 @@ namespace NhaXeNoiBai.Repository.Behaviours
             {
                 entity.Status = (int)DiscountCodeStatusEnum.Expired;
             }
+
             _context.DiscountEntities.Add(entity);
             await _context.SaveChangesAsync();
 
             var result = await _context.DiscountEntities.FindAsync(entity.Id);
             return result ?? new DiscountEntity();
         }
+
 
 
         public async Task<DiscountEntity> UpdateDiscount(DiscountEntity entity)
@@ -59,6 +74,15 @@ namespace NhaXeNoiBai.Repository.Behaviours
             if (existingEntity == null)
             {
                 throw new KeyNotFoundException("Discount entity not found");
+            }
+
+            // Check for overlapping discount periods
+            bool isOverlapping = await _context.DiscountEntities
+                .AnyAsync(d => (d.StartTime < entity.EndTime && d.EndTime > entity.StartTime) && d.Id != entity.Id);
+
+            if (isOverlapping)
+            {
+                throw new DiscountException("Đã có chương trình khuyến mãi trong thời gian này");
             }
 
             if (entity.StartTime <= now && now <= entity.EndTime)
@@ -148,6 +172,76 @@ namespace NhaXeNoiBai.Repository.Behaviours
             result.PageCount =
                (int)Math.Ceiling(Convert.ToDecimal(countTotal) / Convert.ToDecimal(model.PageInfo.PageSize));
             result.PageIndex = model.PageInfo.PageNo;
+            return result;
+        }
+
+        public async Task<DiscountCodeFilterModel> GetListFilterDiscount()
+        {
+            var moneyFilter = await _context.DiscountEntities
+                             .Join(
+                                 _context.MoneyEntities,
+                                 dc => dc.DiscountNumber,
+                                 m => m.Id.ToString(),
+                                 (dc, m) => new MoneyFilterOptionModel
+                                 {
+                                     Value = m.Id,
+                                     Label = m.Title,
+                                     Money = m.Money
+                                 })
+                             .Distinct()
+                             .OrderBy(x => x.Money)
+                             .ToListAsync();
+
+            var discountCodeStatus = await _context.DiscountEntities
+                .Select(dc => dc.Status)
+                .Distinct()
+                .ToListAsync();
+
+            var dataFilter = new DiscountCodeFilterModel()
+            {
+                MoneyFilters = moneyFilter,
+                Status = discountCodeStatus
+            };
+            return dataFilter;
+        }
+
+        public async Task<List<DiscountEntity>> GetExpiredDiscountAsync()
+        {
+            var query = await _context.DiscountEntities
+             .Where(dc => dc.EndTime.HasValue && dc.EndTime.Value < DateTime.Now && dc.Status != (int)DiscountCodeStatusEnum.Expired)
+             .ToListAsync();
+            return query; ;
+        }
+
+        public async Task<List<DiscountEntity>> GetActiveDiscountAsync()
+        {
+            var now = DateTime.Now;
+            var query = await _context.DiscountEntities
+                 .Where(dc => dc.StartTime.HasValue
+                              && dc.StartTime.Value < now
+                              && dc.EndTime.HasValue
+                              && dc.EndTime.Value > now
+                              && dc.Status != (int)DiscountCodeStatusEnum.Active)
+                 .ToListAsync();
+            return query;
+        }
+
+        public async Task UpdateDiscountAsync(DiscountEntity discount)
+        {
+            _context.DiscountEntities.Update(discount);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<DiscountModel> GetDiscountNotice()
+        {
+            var query = await _context.DiscountEntities.Where(d => d.Status == (int)DiscountCodeStatusEnum.Active).FirstOrDefaultAsync();
+            var result = new DiscountNoticeModel()
+            {
+                Title = query?.Title,
+                Status = query?.Status,
+                StartTime = query?.StartTime,
+                EndTime = query?.EndTime,
+            };
             return result;
         }
     }

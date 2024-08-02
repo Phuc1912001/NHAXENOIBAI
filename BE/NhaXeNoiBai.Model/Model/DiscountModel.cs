@@ -11,11 +11,19 @@ namespace NhaXeNoiBai.Model.Model
     {
         public string? Title { get; set; }
         public string? DiscountNumber { get; set; }
-        public string? DiscountCodeTitle { get; set; }
+        public string? DiscountTitle { get; set; }
         public string? Description { get; set; }
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }
         public int? Status { get; set; }
+        public FileInforImage? FileInforImage { get; set; }
 
+    }
+
+    public class FileInforImage
+    {
+        public string? ImageSrc {  set; get; }  
+        public string? KeyImage { set; get; }
+           
     }
 }

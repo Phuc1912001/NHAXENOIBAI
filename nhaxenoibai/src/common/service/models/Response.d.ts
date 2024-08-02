@@ -4,6 +4,7 @@ declare namespace Response {
   export interface IDefaultResponse {
     state?: ResponseState;
     statusCode?: number;
+    errorCode?: number;
     message?: string;
     result?: A;
     prameter?: A;

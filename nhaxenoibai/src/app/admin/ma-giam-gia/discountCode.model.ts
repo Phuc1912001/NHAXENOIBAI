@@ -41,3 +41,16 @@ export interface IFilterDiscountCodeValue {
   money: string[];
   dateRange: string[];
 }
+
+export interface IFilterDrawerSections {
+  title?: string;
+  key?: string | number;
+  name?: string;
+  isDisplay: boolean;
+  render(
+    text?: A,
+    record?: IFilterDrawerSections,
+    index?: number,
+    columns?: IFilterDrawerSections[]
+  ): React.JSX.Element;
+}

@@ -23,7 +23,9 @@ namespace NhaXeNoiBai.Controllers
                 using (var scope = _serviceProvider.CreateScope())
                 {
                     var discountCodeService = scope.ServiceProvider.GetRequiredService<IDiscountCodeService>();
+                    var discountService = scope.ServiceProvider.GetRequiredService<IDiscountService>();
                     await discountCodeService.UpdateExpiredDiscountCodesAsync();
+                    await discountService.UpdateExpiredDiscountAsync();
                 }
 
                 await Task.Delay(TimeSpan.FromSeconds(20), stoppingToken); // Chạy lại sau mỗi 5 phút

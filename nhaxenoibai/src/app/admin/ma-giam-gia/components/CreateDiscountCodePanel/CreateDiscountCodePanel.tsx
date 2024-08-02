@@ -288,6 +288,9 @@ const CreateDiscountCodePanel = (
                 label={selectedData?.status ?? 1}
               ></Status>
             </TextItem>
+            <TextItem label="Mô tả" textItemProps={{ isCol: false }}>
+              {selectedData?.description}
+            </TextItem>
             <TextItem label="Thời gian tạo" textItemProps={{ isCol: false }}>
               {dayjs(selectedData?.createAt).format("DD/MM/YYYY HH:mm")}
             </TextItem>

@@ -1,7 +1,11 @@
-import React, { forwardRef, useImperativeHandle, useState } from "react";
+import React, {
+  forwardRef,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import styles from "./CreateDiscountPanel.module.scss";
 import { Button, DatePicker, Drawer, Form, Input, Select } from "antd";
-import { PanelRef } from "../../discount.model";
 import { CloseOutlined } from "@ant-design/icons";
 import { useForm } from "antd/es/form/Form";
 import { useUnsavedChanges } from "@/common/hook/useUnsavedChanges";
@@ -13,9 +17,19 @@ import service from "@/common/service/apis";
 import { Money } from "@/common/service/models/Money";
 import dayjs from "dayjs";
 import TextArea from "antd/es/input/TextArea";
+import { PanelRefDiscount } from "../../discount.model";
+import TextItem from "@/app/admin/Components/text-item/TextItem";
+import Status from "@/components/Status/Status";
+import { EEventStatusProperties } from "@/app/admin/ma-giam-gia/discountCode.model";
+import UploadPhoto from "@/app/admin/Components/UploadPhoto/UploadPhoto";
+import {
+  IInitValue,
+  UploadPhotoRef,
+} from "@/app/admin/Components/UploadPhoto/UploadPhoto.model";
 
 interface ICreateDiscountPanel {
-  // getListDiscount: () => void;
+  getListDiscount: () => void;
+  getDiscountNotice: () => void;
 }
 
 interface IOptionValue {
@@ -25,8 +39,9 @@ interface IOptionValue {
 
 const CreateDiscountPanel = (
   props: ICreateDiscountPanel,
-  ref: React.Ref<PanelRef>
+  ref: React.Ref<PanelRefDiscount>
 ) => {
+  const { getListDiscount, getDiscountNotice } = props;
   const [type, setType] = useState<string>("Create");
   const [isOpen, setIsOpenPanel] = useState<boolean>(false);
   const [form] = useForm();
@@ -34,6 +49,14 @@ const CreateDiscountPanel = (
   const { showLoading, closeLoading } = useLoading();
   const [selectedData, setSelectedData] = useState<Discount.DiscountModel>();
   const notification = useNotification();
+
+  const uploadPhotoRef = useRef<UploadPhotoRef>(null);
+  const initialFieldValues = {
+    imageSrc: "",
+    imageFile: null,
+  };
+  const [values, setValues] = useState<IInitValue>(initialFieldValues);
+  const [showMessage, setShowMessage] = useState<boolean>(false);
 
   const { isDirty, handleFormChange, setIsDirty } = useUnsavedChanges(
     form,
@@ -73,6 +96,10 @@ const CreateDiscountPanel = (
 
       form.setFieldsValue(dataDiscountCode);
       setSelectedData(data);
+      setValues({
+        ...values,
+        imageSrc: data.fileInforImage?.imageSrc,
+      });
     }
     if (type !== "View") {
       getFullListMoney();
@@ -85,13 +112,31 @@ const CreateDiscountPanel = (
     } else {
       setIsOpenPanel(false);
       form.resetFields();
+      setShowMessage(false);
     }
   };
 
   const handleSubmit = async () => {
     try {
       showLoading("CreateDiscount");
-      await form.validateFields();
+      let isValid = true;
+
+      if (!values.imageSrc) {
+        setShowMessage(true);
+        isValid = false;
+      }
+
+      try {
+        await form.validateFields();
+      } catch (error) {
+        isValid = false;
+      }
+
+      if (!isValid) {
+        closeLoading("CreateDiscount");
+        return;
+      }
+
       const model = form.getFieldsValue();
       const createModel: Discount.DiscountModel = {
         ...model,
@@ -104,22 +149,41 @@ const CreateDiscountPanel = (
         startTime: dayjs(model.startTime).format(),
         endTime: dayjs(model.endTime).format(),
       };
-      if (type === "Create") {
-        await service.discountCode.createDiscountCode(createModel);
-      } else {
-        await service.discountCode.updateDiscountCode(modelEdit);
-      }
-      type === "Create"
-        ? notification.success("Tạo thành công.")
-        : notification.success("Sửa thành công.");
 
-      // getDiscountCode();
+      if (type === "Create") {
+        const { result, errorCode } = await service.discount.createDiscount(
+          createModel
+        );
+        await uploadPhotoRef.current?.handleSubmitImage(result?.id);
+        if (errorCode === 1) {
+          notification.error(result.message);
+        } else {
+          notification.success("Tạo thành công.");
+        }
+      } else {
+        const { result, errorCode } = await service.discount.updateDiscount(
+          modelEdit
+        );
+        await uploadPhotoRef.current?.handleSubmitImage(
+          selectedData?.id ?? result?.id
+        );
+
+        if (errorCode === 1) {
+          notification.error(result.message);
+        } else {
+          notification.success("Sửa thành công.");
+        }
+      }
+
+      getListDiscount();
+      getDiscountNotice();
       form.resetFields();
       setIsDirty(false);
       setIsOpenPanel(false);
-
-      closeLoading("CreateDiscount");
+      setShowMessage(false);
     } catch (error) {
+      // Optionally handle specific errors here
+    } finally {
       closeLoading("CreateDiscount");
     }
   };
@@ -129,6 +193,7 @@ const CreateDiscountPanel = (
     setIsDirty(false);
     setIsOpenPanel(false);
     setIsModalVisible(false);
+    setShowMessage(false);
   };
 
   const handleStay = () => {
@@ -195,7 +260,7 @@ const CreateDiscountPanel = (
                   message: "Vui lòng điền số tiền giảm.",
                 },
               ]}
-              name="discountCodeNumber"
+              name="discountNumber"
               label="Số tiền giảm:"
             >
               <Select
@@ -206,6 +271,18 @@ const CreateDiscountPanel = (
                 filterOption={filterOption}
               />
             </Form.Item>
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng điền mô tả .",
+                },
+              ]}
+              name="description"
+              label="Mô tả:"
+            >
+              <TextArea maxLength={2000} />
+            </Form.Item>
 
             <Form.Item
               rules={[
@@ -215,7 +292,7 @@ const CreateDiscountPanel = (
                 },
               ]}
               name="startTime"
-              label="Thời gian bắt đầu :"
+              label="Thời gian bắt đầu:"
             >
               <DatePicker
                 // format="DD MMM YYYY"
@@ -235,7 +312,7 @@ const CreateDiscountPanel = (
                 },
               ]}
               name="endTime"
-              label="Thời gian kết thúc :"
+              label="Thời gian kết thúc:"
             >
               <DatePicker
                 // format="DD MMM YYYY"
@@ -246,21 +323,46 @@ const CreateDiscountPanel = (
                 showMinute
               />
             </Form.Item>
-            <Form.Item
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng điền mô tả .",
-                },
-              ]}
-              name="description"
-              label="Mô tả:"
-            >
-              <TextArea maxLength={2000} />
-            </Form.Item>
+            <UploadPhoto
+              ref={uploadPhotoRef}
+              values={values}
+              setValues={setValues}
+              showMessage={showMessage}
+              setShowMessage={setShowMessage}
+              initialFieldValues={initialFieldValues}
+              selectedData={selectedData}
+            />
           </Form>
         ) : (
-          <div>view</div>
+          <div>
+            <TextItem label="Khuyến mãi" textItemProps={{ isCol: false }}>
+              {selectedData?.title}
+            </TextItem>
+            <TextItem label="Số tiền giảm" textItemProps={{ isCol: false }}>
+              {selectedData?.discountTitle}
+            </TextItem>
+            <TextItem label="Ngày bắt đầu" textItemProps={{ isCol: false }}>
+              {dayjs(selectedData?.startTime).format("DD/MM/YYYY HH:mm")}
+            </TextItem>
+            <TextItem label="Ngày kết thúc" textItemProps={{ isCol: false }}>
+              {dayjs(selectedData?.endTime).format("DD/MM/YYYY HH:mm")}
+            </TextItem>
+            <TextItem label="Trạng thái" textItemProps={{ isCol: false }}>
+              <Status
+                data={EEventStatusProperties}
+                label={selectedData?.status ?? 1}
+              ></Status>
+            </TextItem>
+            <TextItem label="Mô tả" textItemProps={{ isCol: false }}>
+              {selectedData?.description}
+            </TextItem>
+            <TextItem label="Thời gian tạo" textItemProps={{ isCol: false }}>
+              {dayjs(selectedData?.createAt).format("DD/MM/YYYY HH:mm")}
+            </TextItem>
+            <TextItem label="Thời gian sửa" textItemProps={{ isCol: false }}>
+              {dayjs(selectedData?.updateAt).format("DD/MM/YYYY HH:mm")}
+            </TextItem>
+          </div>
         )}
       </Drawer>
       <ModalDiscard

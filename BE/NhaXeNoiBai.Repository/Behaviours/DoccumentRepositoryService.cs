@@ -54,5 +54,22 @@ namespace NhaXeNoiBai.Repository.Behaviours
             return entity;
         }
 
+        public async Task<bool> CheckFileInListDocument(string? recordId)
+        {
+            var entity = await _context.DocumentEntities
+                            .Where(d => d.RecordId.ToString() == recordId)
+                            .FirstOrDefaultAsync();
+            if (entity == null)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<List<DocumentEntity>> GetListDoccuemnt()
+        {
+            var listEntity = await _context.DocumentEntities.ToListAsync();
+            return listEntity;        
+        }
     }
 }

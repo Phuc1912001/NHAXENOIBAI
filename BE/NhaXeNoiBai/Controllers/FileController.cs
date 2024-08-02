@@ -40,6 +40,13 @@ namespace NhaXeNoiBai.Controllers
                     string keyName = $"{model.Entity}/{model.RecordId}/{model.DocumentType}/{IdFile}/{Path.GetExtension(file.FileName)}";
                     string fileUrl = $"https://{bucketName}.s3.amazonaws.com/{keyName}";
 
+                    var checkFile = await _doccumentService.CheckFileInListDocument(model.RecordId);
+
+                    if(checkFile)
+                    {
+                        await DeleteFileAsync(Guid.Parse(model.RecordId!));
+                    }
+               
                     var entity = new DocumentEntity()
                     {
                         Id = IdFile,
@@ -100,8 +107,9 @@ namespace NhaXeNoiBai.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> GetAllFilesAsync(string bucketName, string? prefix)
+        public async Task<IActionResult> GetAllFilesAsync( string? prefix)
         {
+            string bucketName = "nhaxesanbay";
             var bucketExists = await Amazon.S3.Util.AmazonS3Util.DoesS3BucketExistV2Async(_s3Client, bucketName);
             if (!bucketExists) return NotFound($"Bucket {bucketName} does not exist.");
             var request = new ListObjectsV2Request()
@@ -127,14 +135,50 @@ namespace NhaXeNoiBai.Controllers
             return Ok(s3Objects);
         }
 
+        //[HttpPost("preview")]
+        //public async Task<IActionResult> GetFileByKeyAsync(FileInforImage fileInforImage)
+        //{
+        //    string bucketName = "nhaxesanbay";
+        //    var bucketExists = await Amazon.S3.Util.AmazonS3Util.DoesS3BucketExistV2Async(_s3Client, bucketName);
+        //    if (!bucketExists) return NotFound($"Bucket {bucketName} does not exist.");
+        //    var s3Object = await _s3Client.GetObjectAsync(bucketName, fileInforImage.KeyImage);
+        //    return File(s3Object.ResponseStream, s3Object.Headers.ContentType);
+        //}
+
         [HttpGet("preview")]
-        public async Task<IActionResult> GetFileByKeyAsync(string bucketName, string key)
+        public async Task<IActionResult> GetFileByKeyAsync( string key)
         {
+            string bucketName = "nhaxesanbay";
             var bucketExists = await Amazon.S3.Util.AmazonS3Util.DoesS3BucketExistV2Async(_s3Client, bucketName);
             if (!bucketExists) return NotFound($"Bucket {bucketName} does not exist.");
             var s3Object = await _s3Client.GetObjectAsync(bucketName, key);
             return File(s3Object.ResponseStream, s3Object.Headers.ContentType);
         }
+
+        //[HttpPost("preview")]
+        //public async Task<IActionResult> GetFileByKeyAsync([FromBody] FileInforImage fileInforImage)
+        //{
+        //    string bucketName = "nhaxesanbay";
+        //    var bucketExists = await Amazon.S3.Util.AmazonS3Util.DoesS3BucketExistV2Async(_s3Client, bucketName);
+        //    if (!bucketExists) return NotFound($"Bucket {bucketName} does not exist.");
+
+        //    // Define an expiration time for the URL (e.g., 1 hour)
+        //    var expiration = DateTime.UtcNow.AddHours(1);
+
+        //    // Generate a pre-signed URL for the file
+        //    var request = new GetPreSignedUrlRequest
+        //    {
+        //        BucketName = bucketName,
+        //        Key = fileInforImage.KeyImage,
+        //        Expires = expiration
+        //    };
+
+        //    string urlString = _s3Client.GetPreSignedURL(request);
+
+        //    // Return the URL as part of a response
+        //    return Ok(new { Url = urlString });
+        //}
+
 
         [HttpDelete]
         public async Task<string> DeleteFileAsync(Guid recordId)
