@@ -15,6 +15,19 @@ import {
 } from "./discountCode.model";
 import DiscountCodeFilterPanel from "./components/DiscountCodeFilterPanel/DiscountCodeFilterPanel";
 import dayjs from "dayjs";
+import MobileHeader from "../Components/MobileHeader/MobileHeader";
+import { Affix, Button, Popover } from "antd";
+import {
+  CloseOutlined,
+  FilterOutlined,
+  PlusCircleOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
+import styles from "./dicountCode.module.scss";
+import Search from "antd/es/input/Search";
+import TableDiscountCodeMobile from "./components/TableDiscountCodeMobile/TableDiscountCodeMobile";
+import { useDevice } from "@/common/context/useDevice";
+import { EDeviceType } from "@/common/enum/EDevice";
 
 const Page = () => {
   const panelRef = useRef<PanelRefDiscountCode>(null);
@@ -32,6 +45,7 @@ const Page = () => {
     useState<DiscountCode.DiscountCodeFilterModel>();
 
   const [filterValue, setFilterValue] = useState<IFilterDiscountCodeValue>();
+  const [mobileSearch, setMobileSearch] = useState<boolean>(false);
 
   const notification = useNotification();
 
@@ -56,6 +70,8 @@ const Page = () => {
   const openPanel = (data?: A, type?: string) => {
     panelRef.current?.openPanel(data, type);
   };
+  const { type } = useDevice();
+  const isMobile = type === EDeviceType.Mobile;
 
   const getDiscountCode = useCallback(async () => {
     try {
@@ -193,39 +209,119 @@ const Page = () => {
 
   return (
     <div>
-      <TabBar
-        openPanel={openPanel}
-        btnText="Tạo Mã giảm giá"
-        placeholderSearch="Nhập mã giảm giá"
-        onSearch={nameSearch}
-        handleOpenFilter={handleOpenFilter}
-      />
-      <TableDiscountCode
-        openPanel={openPanel}
-        listDiscountCode={dataDiscountCode}
-        currentPage={currentPage}
-        totalRecordCount={totalRecordCount}
-        setPage={setPage}
-        handleOpenModal={handleOpenModal}
-      />
-      <CreateDiscountCodePanel
-        ref={panelRef}
-        getDiscountCode={getDiscountCode}
-      />
-      <DiscountCodeFilterPanel
-        ref={filterRef}
-        filterValue={filterValue}
-        dataFilterDiscountCode={dataFilterDiscountCode}
-        filter={filter}
-      />
-      <ModalDelete
-        title="Xóa mã giảm"
-        openModal={showModalDelete}
-        btnText="Xóa mã giảm"
-        handleCancel={handleCancelDelete}
-        handleDelete={handleConfirmDelete}
-        content={`Bạn có muốn xóa mã giảm ${currentRecord?.title}.`}
-      />
+      {!mobileSearch ? (
+        <MobileHeader title="Mã giảm giá">
+          <Button
+            type="text"
+            icon={<PlusCircleOutlined />}
+            onClick={() => openPanel()}
+          />
+
+          <Button
+            onClick={handleOpenFilter}
+            type="text"
+            icon={<FilterOutlined />}
+            // style={{ marginRight: "16px" }}
+          />
+          <Button
+            type="text"
+            // className={styles.searchWrapper}
+            onClick={() => {
+              setMobileSearch((prev) => !prev);
+            }}
+          >
+            <SearchOutlined className={styles.iconSearch} />
+          </Button>
+        </MobileHeader>
+      ) : (
+        <Affix offsetTop={0}>
+          <div className={styles.mobileSearchWrapper}>
+            <div className={styles.searchText}>
+              <Popover
+                placement="bottom"
+                content={
+                  <div>
+                    <p>Tìm kiếm theo mã giảm giá nhé</p>
+                  </div>
+                }
+                trigger="hover"
+              >
+                <Search
+                  placeholder={"tìm kiếm đê"}
+                  onSearch={nameSearch}
+                  // style={{ width: 250 }}
+                  size="large"
+                  allowClear
+                />
+              </Popover>
+            </div>
+            <div
+              onClick={() => {
+                setMobileSearch((prev) => !prev);
+              }}
+            >
+              <div className={styles.closeSearchBox}>
+                <CloseOutlined />
+              </div>
+            </div>
+          </div>
+        </Affix>
+      )}
+
+      <div className={styles.wrapperContent}>
+        <div className={styles.tabBarPc}>
+          <TabBar
+            openPanel={openPanel}
+            btnText="Tạo Mã giảm giá"
+            placeholderSearch="Nhập mã giảm giá"
+            onSearch={nameSearch}
+            handleOpenFilter={handleOpenFilter}
+          />
+        </div>
+        <div className={styles.tabBarMobile}></div>
+
+        {isMobile ? (
+          <div className={styles.tableMobile}>
+            <TableDiscountCodeMobile
+              openPanel={openPanel}
+              data={dataDiscountCode}
+              currentPage={currentPage}
+              totalRecordCount={totalRecordCount}
+              setPage={setPage}
+              handleOpenModal={handleOpenModal}
+            />
+          </div>
+        ) : (
+          <div className={styles.tablePC}>
+            <TableDiscountCode
+              openPanel={openPanel}
+              listDiscountCode={dataDiscountCode}
+              currentPage={currentPage}
+              totalRecordCount={totalRecordCount}
+              setPage={setPage}
+              handleOpenModal={handleOpenModal}
+            />
+          </div>
+        )}
+        <CreateDiscountCodePanel
+          ref={panelRef}
+          getDiscountCode={getDiscountCode}
+        />
+        <DiscountCodeFilterPanel
+          ref={filterRef}
+          filterValue={filterValue}
+          dataFilterDiscountCode={dataFilterDiscountCode}
+          filter={filter}
+        />
+        <ModalDelete
+          title="Xóa mã giảm"
+          openModal={showModalDelete}
+          btnText="Xóa mã giảm"
+          handleCancel={handleCancelDelete}
+          handleDelete={handleConfirmDelete}
+          content={`Bạn có muốn xóa mã giảm ${currentRecord?.title}.`}
+        />
+      </div>
     </div>
   );
 };

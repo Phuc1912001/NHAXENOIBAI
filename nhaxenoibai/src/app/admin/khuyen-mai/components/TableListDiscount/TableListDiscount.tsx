@@ -9,6 +9,7 @@ import Status from "@/components/Status/Status";
 import { EEventStatusProperties } from "@/app/admin/ma-giam-gia/discountCode.model";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import service from "@/common/service/apis";
+import ViewImage from "@/components/ViewImage/ViewImage";
 
 interface ITableListDiscount {
   openPanel: (data?: Discount.DiscountModel, type?: string) => void;
@@ -29,15 +30,6 @@ const TableListDiscount = (props: ITableListDiscount) => {
     handleOpenModal,
   } = props;
 
-  const [loading, setLoading] = useState(true);
-  const handleImageLoad = () => {
-    setLoading(false);
-  };
-
-  const handleImageError = () => {
-    setLoading(false);
-  };
-
   const columns: ColumnsType<Discount.DiscountModel> = [
     {
       title: "Khuyến mãi",
@@ -46,23 +38,11 @@ const TableListDiscount = (props: ITableListDiscount) => {
       width: "20%",
       render: (_, record) => (
         <div className={styles.wrapperDiscountTile}>
-          {record?.fileInforImage?.imageSrc && (
-            <div className={styles.wrapperImage}>
-              <Image
-                rootClassName={styles.images}
-                src={record?.fileInforImage?.imageSrc}
-                preview={false}
-                loading="eager"
-                onLoad={handleImageLoad}
-                onError={handleImageError}
-                placeholder={
-                  <div className={styles.placeholder}>
-                    <Spin spinning={loading} />
-                  </div>
-                }
-              />
-            </div>
-          )}
+          <ViewImage
+            isPreview={false}
+            keyImage={record.fileInforImage?.keyImage ?? ""}
+            isHeight40={true}
+          />
 
           <div className={styles.wrapperTitle}>
             <Tooltip
@@ -90,24 +70,24 @@ const TableListDiscount = (props: ITableListDiscount) => {
     },
     {
       title: "Bắt đầu",
-      dataIndex: "StartTime",
-      key: "StartTime",
+      dataIndex: "startTime",
+      key: "startTime",
       render: (_, record) => (
         <div>{dayjs(record.startTime).format("DD/MM/YYYY HH:mm ")}</div>
       ),
     },
     {
       title: "Kết thúc",
-      dataIndex: "EndTime",
-      key: "EndTime",
+      dataIndex: "endTime",
+      key: "endTime",
       render: (_, record) => (
         <div>{dayjs(record.endTime).format("DD/MM/YYYY HH:mm ")}</div>
       ),
     },
     {
       title: "Trạng thái",
-      dataIndex: "EndTime",
-      key: "EndTime",
+      dataIndex: "status",
+      key: "status",
       render: (_, record) => (
         <div>
           <Status

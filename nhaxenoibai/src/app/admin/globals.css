@@ -2,15 +2,6 @@
   margin: 0;
   padding: 0;
 }
-.siteLayout {
-  background: #fff;
-  margin-left: 221px;
-}
-
-.content {
-  background: #f8fbfe;
-  padding: 20px;
-}
 
 /* Thiết lập cho body hoặc cho phần cụ thể mà bạn muốn tùy chỉnh thanh cuộn */
 body {

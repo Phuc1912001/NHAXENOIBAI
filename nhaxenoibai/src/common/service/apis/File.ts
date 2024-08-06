@@ -22,19 +22,6 @@ export const file = {
     }
   },
 
-  // async getFilePreview(model: A) {
-  //   try {
-  //     const response = await axiosInstance.get("/File/preview", model);
-  //     return response.data;
-  //   } catch (error) {
-  //     console.error(
-  //       "An error occurred while fetching the file preview:",
-  //       error
-  //     );
-  //     throw error;
-  //   }
-  // },
-
   async getFilePreview(model: A) {
     try {
       const response = await axiosInstance.get("/File/preview", {
@@ -49,6 +36,16 @@ export const file = {
         "An error occurred while fetching the file preview:",
         error
       );
+      throw error;
+    }
+  },
+
+  async deleteFileDiscount(id: string) {
+    try {
+      const response = await axiosInstance.delete(`/File/discount/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error("An error occurred while adding the account:", error);
       throw error;
     }
   },

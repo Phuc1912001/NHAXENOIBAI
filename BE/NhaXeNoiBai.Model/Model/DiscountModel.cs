@@ -26,4 +26,6 @@ namespace NhaXeNoiBai.Model.Model
         public string? KeyImage { set; get; }
            
     }
+
+   
 }

@@ -1,0 +1,7 @@
+.LeftNav {
+  :global {
+    .ant-menu-inline {
+      border-inline-end: none !important;
+    }
+  }
+}

@@ -16,10 +16,12 @@ namespace NhaXeNoiBai.Controllers
     {
         private readonly IAmazonS3 _s3Client;
         private readonly IDoccumentService _doccumentService;
-        public FileController(IAmazonS3 s3Client , IDoccumentService doccumentService  )
+        private readonly IDiscountService _discountService;
+        public FileController(IAmazonS3 s3Client , IDoccumentService doccumentService , IDiscountService discountService )
         {
             _s3Client = AwsConfiguration.InitializeS3Client();
             _doccumentService = doccumentService;
+            _discountService = discountService;
         }
         [HttpPost]
         public async Task<bool> UploadFileAsync([FromForm]UploadFileModel model)
@@ -155,29 +157,7 @@ namespace NhaXeNoiBai.Controllers
             return File(s3Object.ResponseStream, s3Object.Headers.ContentType);
         }
 
-        //[HttpPost("preview")]
-        //public async Task<IActionResult> GetFileByKeyAsync([FromBody] FileInforImage fileInforImage)
-        //{
-        //    string bucketName = "nhaxesanbay";
-        //    var bucketExists = await Amazon.S3.Util.AmazonS3Util.DoesS3BucketExistV2Async(_s3Client, bucketName);
-        //    if (!bucketExists) return NotFound($"Bucket {bucketName} does not exist.");
-
-        //    // Define an expiration time for the URL (e.g., 1 hour)
-        //    var expiration = DateTime.UtcNow.AddHours(1);
-
-        //    // Generate a pre-signed URL for the file
-        //    var request = new GetPreSignedUrlRequest
-        //    {
-        //        BucketName = bucketName,
-        //        Key = fileInforImage.KeyImage,
-        //        Expires = expiration
-        //    };
-
-        //    string urlString = _s3Client.GetPreSignedURL(request);
-
-        //    // Return the URL as part of a response
-        //    return Ok(new { Url = urlString });
-        //}
+       
 
 
         [HttpDelete]
@@ -203,6 +183,23 @@ namespace NhaXeNoiBai.Controllers
                 throw;
             }
         }
+
+        [HttpDelete("discount/{id}")]
+        public async Task<IActionResult> DeleteDiscount(Guid id)
+        {
+            try
+            {
+                await _discountService.DeleteDiscount(id);
+                await DeleteFileAsync(id);
+
+                return Ok("Discount deleted successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
 
     }
 }

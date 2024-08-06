@@ -6,6 +6,7 @@ import LeftNav from "../LeftNav/LeftNav";
 import LogoAdmin from "../LogoAdmin/LogoAdmin";
 import { useLoading } from "@/common/context/useLoading";
 import LazyLoading from "@/components/LazyLoading/LazyLoading";
+import styles from "./LayoutAdmin.module.scss";
 const { Header, Content, Sider } = Layout;
 
 const LayoutAdmin = ({ children }: A) => {
@@ -15,7 +16,7 @@ const LayoutAdmin = ({ children }: A) => {
     <div>
       <Layout>
         <Sider
-          className={``}
+          className={styles.masterSider}
           style={{
             overflow: "auto",
             height: "100vh",
@@ -34,8 +35,8 @@ const LayoutAdmin = ({ children }: A) => {
           <LogoAdmin />
           <LeftNav />
         </Sider>
-        <Layout className="siteLayout">
-          <Affix className={"siteLayoutAffix"} offsetTop={0}>
+        <Layout className={styles.siteLayout}>
+          <Affix className={styles.siteLayoutAffix} offsetTop={0}>
             <Header
               style={{
                 padding: 0,
@@ -46,7 +47,7 @@ const LayoutAdmin = ({ children }: A) => {
               header
             </Header>
           </Affix>
-          <Content className="content">{children}</Content>
+          <Content className={styles.content}>{children}</Content>
         </Layout>
       </Layout>
       {isLoading && <LazyLoading />}

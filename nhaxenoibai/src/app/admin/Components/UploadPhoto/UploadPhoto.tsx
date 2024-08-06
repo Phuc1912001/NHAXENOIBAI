@@ -21,6 +21,9 @@ interface IUploadPhoto {
   showMessage: boolean;
   setShowMessage: React.Dispatch<React.SetStateAction<boolean>>;
   selectedData?: Discount.DiscountModel;
+  type?: string;
+  previewUrl?: string;
+  setPreviewUrl: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const UploadPhoto = (props: IUploadPhoto, ref: React.Ref<UploadPhotoRef>) => {
@@ -31,11 +34,12 @@ const UploadPhoto = (props: IUploadPhoto, ref: React.Ref<UploadPhotoRef>) => {
     setShowMessage,
     initialFieldValues,
     selectedData,
+    type,
+    previewUrl,
+    setPreviewUrl,
   } = props;
   const [previewOpen, setPreviewOpen] = useState(false);
   const [loading, setLoading] = useState(true); // State to manage loading
-  const [previewUrl, setPreviewUrl] = useState("");
-
   const previousImageFileRef = useRef(values.imageFile);
 
   useImperativeHandle(ref, () => ({
@@ -60,14 +64,6 @@ const UploadPhoto = (props: IUploadPhoto, ref: React.Ref<UploadPhotoRef>) => {
     } else {
       setValues(initialFieldValues);
     }
-  };
-
-  const handleDeleteImage = () => {
-    setValues({
-      ...values,
-      imageSrc: "",
-      imageFile: undefined, // Clear imageFile as well
-    });
   };
 
   const handleSubmitImage = async (id?: string) => {
@@ -96,8 +92,23 @@ const UploadPhoto = (props: IUploadPhoto, ref: React.Ref<UploadPhotoRef>) => {
     }
   };
   useEffect(() => {
-    getPreviewImage();
+    if (type === "Edit") {
+      getPreviewImage();
+    } else {
+      setLoading(false);
+    }
   }, [selectedData]);
+
+  const srcImg =
+    type === "Create" ? values.imageSrc : values.imageSrc || previewUrl;
+
+  const isRenderImage = () => {
+    if (type === "Edit") {
+      return true;
+    } else {
+      return values.imageSrc;
+    }
+  };
 
   return (
     <div>
@@ -120,37 +131,38 @@ const UploadPhoto = (props: IUploadPhoto, ref: React.Ref<UploadPhotoRef>) => {
             </div>
 
             <div>
-              <div className={styles.imageChoose}>
-                <div>
-                  <Spin spinning={loading}>
-                    {loading ? (
-                      <div
-                        style={{
-                          width: "80px",
-                          height: "80px",
-                          border: "1px solid black",
-                          borderRadius: "4px",
-                        }}
-                      ></div>
-                    ) : (
-                      <Image
-                        rootClassName={styles.images}
-                        preview={{
-                          visible: previewOpen,
-                          movable: false,
-                          onVisibleChange: (visible) => setPreviewOpen(visible),
-                          afterOpenChange: (visible) =>
-                            !visible && setPreviewOpen(false),
-                        }}
-                        src={previewUrl}
-                      />
-                    )}
-                  </Spin>
+              {isRenderImage() && (
+                <div className={styles.imageChoose}>
+                  <div>
+                    <Spin spinning={loading}>
+                      {loading ? (
+                        <div
+                          style={{
+                            width: "80px",
+                            height: "80px",
+                            border: "1px solid black",
+                            borderRadius: "4px",
+                          }}
+                        ></div>
+                      ) : (
+                        <Image
+                          rootClassName={styles.images}
+                          preview={{
+                            visible: previewOpen,
+                            movable: false,
+                            onVisibleChange: (visible) =>
+                              setPreviewOpen(visible),
+                            afterOpenChange: (visible) =>
+                              !visible && setPreviewOpen(false),
+                          }}
+                          src={srcImg}
+                          alt="loading"
+                        />
+                      )}
+                    </Spin>
+                  </div>
                 </div>
-                <div onClick={handleDeleteImage} className={styles.icon}>
-                  <DeleteOutlined />
-                </div>
-              </div>
+              )}
             </div>
           </div>
           {showMessage && (

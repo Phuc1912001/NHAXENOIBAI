@@ -21,7 +21,6 @@ const useNotification = () => {
       ...baseConfig,
       icon: <CheckCircleFilled className="notification-success" />,
     };
-
     notification.success({ ...successConfig, message, ...config });
   };
 
@@ -31,7 +30,6 @@ const useNotification = () => {
       icon: <InfoCircleFilled className="notification-info" />,
       message: "",
     };
-
     notification.info({ ...infoConfig, message, ...config });
   };
 
@@ -40,7 +38,6 @@ const useNotification = () => {
       ...baseConfig,
       icon: <ExclamationCircleFilled className="notification-error" />,
     };
-
     notification.error({ ...errorConfig, message, ...config });
   };
 
@@ -49,7 +46,6 @@ const useNotification = () => {
       ...baseConfig,
       icon: <WarningFilled className="notification-warning" />,
     };
-
     notification.warning({ ...warningConfig, message, ...config });
   };
 
