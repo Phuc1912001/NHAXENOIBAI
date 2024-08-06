@@ -260,9 +260,9 @@ export const DeviceProvider = (props: IProps) => {
   const scrollSelectChangeStaticScroll = (open?: boolean) => {
     if (type !== EDeviceType.Desktop) {
       if (open) {
-        document.body.classList.add("hcis-hidden-y");
+        document.body.classList.add("nxsb-hidden-y");
       } else {
-        document.body.classList.remove("hcis-hidden-y");
+        document.body.classList.remove("nxsb-hidden-y");
       }
     }
   };

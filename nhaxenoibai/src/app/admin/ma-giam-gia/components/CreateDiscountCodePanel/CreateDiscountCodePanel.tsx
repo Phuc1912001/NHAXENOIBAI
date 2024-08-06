@@ -18,6 +18,8 @@ import { Money } from "@/common/service/models/Money";
 import dayjs from "dayjs";
 import TextItem from "@/app/admin/Components/text-item/TextItem";
 import Status from "@/components/Status/Status";
+import { useDevice } from "@/common/context/useDevice";
+import { EDeviceType } from "@/common/enum/EDevice";
 
 interface ICreateDiscountCodePanel {
   getDiscountCode: () => void;
@@ -45,7 +47,8 @@ const CreateDiscountCodePanel = (
     useState<DiscountCode.DiscountCodeModel>();
   const [dataMoney, setDataMoney] = useState<Money.MoneyModel[]>([]);
   const [optionMoney, setOptionMoney] = useState<IOptionValue[]>([]);
-
+  const { type: typeDevice } = useDevice();
+  const isMobile = typeDevice === EDeviceType.Mobile;
   const { showLoading, closeLoading } = useLoading();
 
   const getFullListMoney = async () => {
@@ -182,7 +185,7 @@ const CreateDiscountCodePanel = (
             )}
           </div>
         }
-        width={520}
+        width={isMobile ? "90%" : 520}
       >
         {type === "Create" || type === "Edit" ? (
           <Form layout="vertical" form={form} onValuesChange={handleFormChange}>

@@ -19,6 +19,8 @@ import {
 } from "../../discountCode.model";
 import { DiscountCode } from "@/common/service/models/DiscountCode";
 import Card from "@/app/admin/Components/FoldCard/FoldCard";
+import { useDevice } from "@/common/context/useDevice";
+import { EDeviceType } from "@/common/enum/EDevice";
 
 interface IDiscountCodeFilterPanel {
   dataFilterDiscountCode?: DiscountCode.DiscountCodeFilterModel;
@@ -38,6 +40,8 @@ const DiscountCodeFilterPanel = (
   const [open, setOpen] = useState<boolean>(false);
   const [form] = Form.useForm();
   const { RangePicker } = DatePicker;
+  const { type: typeDevice } = useDevice();
+  const isMobile = typeDevice === EDeviceType.Mobile;
 
   useImperativeHandle(ref, () => ({
     handleOpenPanel,
@@ -136,7 +140,7 @@ const DiscountCodeFilterPanel = (
           >
             <RangePicker
               placement="bottomLeft"
-              popupClassName={styles.hcisRangePickerFilterRangeDate}
+              popupClassName={styles.nxsbRangePickerFilterRangeDate}
               format="DD MMM YYYY HH:mm"
               placeholder={["Bắt đầu", "Kết thúc"]}
               style={{ width: "100%" }}
@@ -187,7 +191,7 @@ const DiscountCodeFilterPanel = (
         closable={false}
         extra={<CloseOutlined onClick={handleClose} />}
         footer={renderActionButton()}
-        width={420}
+        width={isMobile ? "90%" : 420}
       >
         <Form onFinish={onFinish} layout="vertical" form={form}>
           {filterSections.map((record) => {

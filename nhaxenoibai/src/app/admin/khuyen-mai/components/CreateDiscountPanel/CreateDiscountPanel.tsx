@@ -26,6 +26,10 @@ import {
   IInitValue,
   UploadPhotoRef,
 } from "@/app/admin/Components/UploadPhoto/UploadPhoto.model";
+import ViewImage from "@/components/ViewImage/ViewImage";
+import { useDevice } from "@/common/context/useDevice";
+import { EDeviceType } from "@/common/enum/EDevice";
+import DateAndTime from "@/app/admin/Components/DateAndTime/DateAndTime";
 
 interface ICreateDiscountPanel {
   getListDiscount: () => void;
@@ -64,6 +68,12 @@ const CreateDiscountPanel = (
   );
 
   const [optionMoney, setOptionMoney] = useState<IOptionValue[]>([]);
+  const [previewUrl, setPreviewUrl] = useState("");
+  const { type: typeDevice } = useDevice();
+  const isMobile = typeDevice === EDeviceType.Mobile;
+
+  // date
+  const [isEndBeforeStart, setIsEndBeforeStart] = useState<boolean>(false);
 
   const getFullListMoney = async () => {
     try {
@@ -90,17 +100,20 @@ const CreateDiscountPanel = (
     if (data) {
       const dataDiscountCode = {
         ...data,
-        startTime: dayjs(data.startTime),
-        endTime: dayjs(data.endTime),
+        startTime: {
+          date: dayjs(data.startTime).format("YYYY-MM-DD"),
+          time: dayjs(data.startTime).format(),
+        },
+        endTime: {
+          date: dayjs(data.endTime).format("YYYY-MM-DD"),
+          time: dayjs(data.endTime).format(),
+        },
       };
 
       form.setFieldsValue(dataDiscountCode);
       setSelectedData(data);
-      setValues({
-        ...values,
-        imageSrc: data.fileInforImage?.imageSrc,
-      });
     }
+
     if (type !== "View") {
       getFullListMoney();
     }
@@ -113,6 +126,12 @@ const CreateDiscountPanel = (
       setIsOpenPanel(false);
       form.resetFields();
       setShowMessage(false);
+      setValues({
+        ...values,
+        imageSrc: "",
+        imageFile: undefined,
+      });
+      setPreviewUrl("");
     }
   };
 
@@ -120,70 +139,77 @@ const CreateDiscountPanel = (
     try {
       showLoading("CreateDiscount");
       let isValid = true;
-
-      if (!values.imageSrc) {
+      if (!values.imageSrc && !previewUrl) {
         setShowMessage(true);
         isValid = false;
       }
-
       try {
         await form.validateFields();
       } catch (error) {
         isValid = false;
       }
-
       if (!isValid) {
         closeLoading("CreateDiscount");
         return;
       }
-
       const model = form.getFieldsValue();
+      const getStartTime = form.getFieldValue("startTime");
+      console.log("getStartTime", getStartTime);
+
+      const formattedDate = dayjs(getStartTime.date).format("YYYY-MM-DD");
+      const formattedTime = dayjs(getStartTime.time).format("HH:mm:ss");
+
+      const combinedDateTime = `${formattedDate}T${formattedTime}Z`;
+      const getEndTime = form.getFieldValue("endTime");
+      const endDate = dayjs(getEndTime.date).format("YYYY-MM-DD");
+      const endTime = dayjs(getEndTime.time).format("HH:mm:ss");
+      const endDateTime = `${endDate}T${endTime}Z`;
       const createModel: Discount.DiscountModel = {
         ...model,
-        startTime: dayjs(model.startTime).format(),
-        endTime: dayjs(model.endTime).format(),
+        startTime: combinedDateTime,
+        endTime: endDateTime,
       };
       const modelEdit: Discount.DiscountModel = {
         ...model,
         id: selectedData?.id,
-        startTime: dayjs(model.startTime).format(),
-        endTime: dayjs(model.endTime).format(),
+        startTime: combinedDateTime,
+        endTime: endDateTime,
       };
-
       if (type === "Create") {
-        const { result, errorCode } = await service.discount.createDiscount(
-          createModel
-        );
-        await uploadPhotoRef.current?.handleSubmitImage(result?.id);
+        const { result, errorCode, message } =
+          await service.discount.createDiscount(createModel);
         if (errorCode === 1) {
-          notification.error(result.message);
+          notification.error(message);
         } else {
+          await uploadPhotoRef.current?.handleSubmitImage(result?.id);
           notification.success("Tạo thành công.");
         }
       } else {
-        const { result, errorCode } = await service.discount.updateDiscount(
-          modelEdit
-        );
-        await uploadPhotoRef.current?.handleSubmitImage(
-          selectedData?.id ?? result?.id
-        );
-
+        const { result, errorCode, message } =
+          await service.discount.updateDiscount(modelEdit);
         if (errorCode === 1) {
-          notification.error(result.message);
+          notification.error(message);
         } else {
+          await uploadPhotoRef.current?.handleSubmitImage(
+            selectedData?.id ?? result?.id
+          );
           notification.success("Sửa thành công.");
         }
       }
-
       getListDiscount();
       getDiscountNotice();
       form.resetFields();
       setIsDirty(false);
       setIsOpenPanel(false);
       setShowMessage(false);
+      setValues({
+        ...values,
+        imageSrc: "",
+        imageFile: undefined,
+      });
+      setPreviewUrl("");
+      closeLoading("CreateDiscount");
     } catch (error) {
-      // Optionally handle specific errors here
-    } finally {
       closeLoading("CreateDiscount");
     }
   };
@@ -194,6 +220,12 @@ const CreateDiscountPanel = (
     setIsOpenPanel(false);
     setIsModalVisible(false);
     setShowMessage(false);
+    setValues({
+      ...values,
+      imageSrc: "",
+      imageFile: undefined,
+    });
+    setPreviewUrl("");
   };
 
   const handleStay = () => {
@@ -203,6 +235,59 @@ const CreateDiscountPanel = (
   const filterOption = (input: string, option?: IOptionValue) =>
     (option?.label ?? "").toLowerCase().includes(input.toLowerCase()) ||
     ((option as any)?.email || "").toLowerCase().includes(input.toLowerCase());
+
+  const checkStartTime = (_: any, value: { date?: string; time?: string }) => {
+    if (
+      !value?.date ||
+      !dayjs(value?.date).isValid() ||
+      !value?.time ||
+      !dayjs(value?.time).isValid()
+    ) {
+      return Promise.reject(new Error("Vui lòng điền thời gian bắt đầu."));
+    }
+    return Promise.resolve();
+  };
+
+  const onStartTimeChange = () => {
+    const getEndTime = form.getFieldValue("endTime");
+    if (getEndTime?.date && getEndTime?.time) {
+      form.validateFields(["endTime"]);
+    }
+  };
+
+  const checkEndTime = async (_: A, value: { date: string; time: string }) => {
+    const getStartTime = form.getFieldValue("startTime");
+    const startDate = dayjs(getStartTime?.date).formatDay();
+    const startTime = dayjs(getStartTime?.time).formatTime();
+    const startDateTime = dayjs(`${startDate} ${startTime}`).formatDayAndTime();
+    const enddate = dayjs(value?.date).formatDay();
+    const endtime = dayjs(value?.time).formatTime();
+    const endDateTime = dayjs(`${enddate} ${endtime}`);
+    const diffDate = dayjs(endDateTime).diff(dayjs(startDateTime), "minutes");
+    if (
+      value?.date &&
+      dayjs(value?.date).isValid() &&
+      value?.time &&
+      dayjs(value?.time).isValid()
+    ) {
+      if (isNaN(diffDate)) {
+        setIsEndBeforeStart(false);
+        return Promise.resolve();
+      } else if (!(diffDate > 0)) {
+        setIsEndBeforeStart(true);
+        return Promise.reject(
+          new Error("Cụ nhập thời gian kết thúc nhỏ hơn thời gian bắt đầu.")
+        );
+      } else {
+        setIsEndBeforeStart(false);
+        return Promise.resolve();
+      }
+    } else {
+      setIsEndBeforeStart(false);
+    }
+
+    return Promise.reject(new Error("Vui lòng điền thời gian kết thúc."));
+  };
 
   return (
     <div>
@@ -240,7 +325,7 @@ const CreateDiscountPanel = (
             )}
           </div>
         }
-        width={520}
+        width={isMobile ? "90%" : 520}
       >
         {type === "Create" || type === "Edit" ? (
           <Form layout="vertical" form={form} onValuesChange={handleFormChange}>
@@ -285,42 +370,31 @@ const CreateDiscountPanel = (
             </Form.Item>
 
             <Form.Item
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng điền thời gian bắt đầu.",
-                },
-              ]}
               name="startTime"
               label="Thời gian bắt đầu:"
+              rules={[{ validator: checkStartTime }]}
             >
-              <DatePicker
-                // format="DD MMM YYYY"
-                inputReadOnly={true}
-                placeholder="chọn ngày bắt đầu"
-                showTime
-                showHour
-                showMinute
+              <DateAndTime
+                onChange={onStartTimeChange}
+                dateStatusError={isEndBeforeStart}
+                timeStatusError={isEndBeforeStart}
               />
             </Form.Item>
 
             <Form.Item
               rules={[
                 {
-                  required: true,
-                  message: "Vui lòng điền thời gian kết thúc.",
+                  validator: checkEndTime,
                 },
               ]}
               name="endTime"
               label="Thời gian kết thúc:"
             >
-              <DatePicker
-                // format="DD MMM YYYY"
-                inputReadOnly={true}
-                placeholder="Chọn ngày kết thúc"
-                showTime
-                showHour
-                showMinute
+              <DateAndTime
+                dateStatusError={isEndBeforeStart}
+                // onChange={onEndTimeChange}
+                timeStatusError={isEndBeforeStart}
+                endDateTime={form.getFieldValue("endTime")}
               />
             </Form.Item>
             <UploadPhoto
@@ -331,6 +405,9 @@ const CreateDiscountPanel = (
               setShowMessage={setShowMessage}
               initialFieldValues={initialFieldValues}
               selectedData={selectedData}
+              type={type}
+              previewUrl={previewUrl}
+              setPreviewUrl={setPreviewUrl}
             />
           </Form>
         ) : (
@@ -361,6 +438,15 @@ const CreateDiscountPanel = (
             </TextItem>
             <TextItem label="Thời gian sửa" textItemProps={{ isCol: false }}>
               {dayjs(selectedData?.updateAt).format("DD/MM/YYYY HH:mm")}
+            </TextItem>
+            <TextItem label="Thời gian sửa" textItemProps={{ isCol: false }}>
+              <div className={styles.wrapperImage}>
+                <ViewImage
+                  isPreview={true}
+                  keyImage={selectedData?.fileInforImage?.keyImage ?? ""}
+                  isHeight40={false}
+                />
+              </div>
             </TextItem>
           </div>
         )}

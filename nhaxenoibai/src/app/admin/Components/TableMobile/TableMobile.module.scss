@@ -1,0 +1,67 @@
+.tableForMobile {
+  background: #fff;
+  box-shadow: 0 0 8px #363e4a0f;
+  display: block;
+  padding: 16px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  .tableHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+  }
+  .headerContent {
+    color: #222222;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 19px;
+  }
+  .tableContent {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    padding: 8px 12px;
+    background-color: #f9fcff;
+    word-wrap: break-word;
+    word-break: break-word;
+    gap: 16px;
+    .items {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px 0;
+    }
+    .itemGroup {
+      width: 47%;
+    }
+    .titleMobile {
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 22px;
+      width: fit-content;
+
+      .paragraph {
+        font-size: 16px;
+      }
+    }
+    .labelMobile {
+      font-size: 14px;
+      color: #585858;
+      line-height: 19px;
+    }
+    .titleMobile,
+    .labelMobile {
+      padding-left: 5px;
+      text-align: start;
+    }
+    .borderLeft {
+      border-left: 1px solid #ccc;
+    }
+  }
+}
+.mobileTablePagination {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 60px;
+}

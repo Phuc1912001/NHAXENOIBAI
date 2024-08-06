@@ -1,31 +1,4 @@
 .wrapperContent {
-  .wrapperNotice {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    margin-top: 24px;
-    margin-bottom: 16px;
-    padding: 8px 9px;
-    border: 1px solid #0072d0;
-    background-color: #eef7ff;
-    border-radius: 2px;
-
-    .infoIcon {
-      color: #0072d0;
-      font-size: 16px;
-      margin-top: 3px;
-    }
-
-    .text {
-      color: #222222;
-      font-size: 14px;
-
-      span {
-        font-weight: 600;
-      }
-    }
-  }
-
   .tabBarPc {
     display: block;
   }
@@ -35,21 +8,27 @@
       display: none;
     }
   }
+
+  @include media-breakpoint-down(md) {
+    .wrapperContent {
+      padding: 16px;
+    }
+  }
+
+  .tablePC {
+    display: block;
+  }
+
+  @include media-breakpoint-down(md) {
+    .tablePC {
+      display: none;
+    }
+  }
 }
 
 @include media-breakpoint-down(md) {
   .wrapperContent {
     padding: 16px;
-  }
-}
-
-.tablePC {
-  display: block;
-}
-
-@include media-breakpoint-down(md) {
-  .tablePC {
-    display: none;
   }
 }
 

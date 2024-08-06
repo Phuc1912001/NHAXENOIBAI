@@ -60,9 +60,12 @@ namespace NhaXeNoiBai.Repository.Behaviours
                 }
             }
 
-            var listDiscountCode = await query.OrderByDescending(x=> x.CreateAt).ToListAsync();
-            var countTotal = await query.CountAsync();
+            var listDiscountCode = await query.OrderByDescending(x => x.CreateAt)
+                                              .Skip(model.PageInfo.PageSize * (model.PageInfo.PageNo - 1))
+                                              .Take(model.PageInfo.PageSize)
+                                              .ToListAsync();
 
+            var countTotal = await query.CountAsync();
             var result = new BaseDataCollection<DiscountCodeEntity>();
             result.BaseDatas = listDiscountCode;
             result.TotalRecordCount = countTotal;
@@ -188,7 +191,7 @@ namespace NhaXeNoiBai.Repository.Behaviours
                                      Money = m.Money
                                  })
                              .Distinct()
-                             .OrderBy( x => x.Money)
+                             .OrderBy(x => x.Money)
                              .ToListAsync();
 
             var discountCodeStatus = await _context.DiscountCodeEntities
