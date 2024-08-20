@@ -24,6 +24,9 @@ namespace NhaXeNoiBai.Model.Mapper
 
             CreateMap<MoneyEntity, MoneyModel>();
             CreateMap<MoneyModel, MoneyEntity>();
+
+            CreateMap<BookCarEntity, BookCarModel>();
+            CreateMap<BookCarModel, BookCarEntity>();
         }
     }
 }

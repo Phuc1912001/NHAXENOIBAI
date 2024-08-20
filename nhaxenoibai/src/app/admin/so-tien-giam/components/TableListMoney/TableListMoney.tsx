@@ -29,11 +29,7 @@ const TableListMoney = (props: ITableListMoney) => {
       title: "Số tiền(Chữ số)",
       dataIndex: "title",
       key: "title",
-      render: (_, record) => (
-        <div onClick={() => openPanel(record, "View")} className={styles.title}>
-          {record.title}
-        </div>
-      ),
+      render: (_, record) => <div className={styles.title}>{record.title}</div>,
     },
     {
       title: "Số tiền",

@@ -11,6 +11,8 @@ namespace NhaXeNoiBai.Service.Interfaces
     {
         Task<BaseDataCollection<DiscountModel>> GetListDiscount(DataGridModel model);
         Task<DiscountCodeFilterModel> GetListFilterDiscount();
+
+
         Task<DiscountModel> GetDiscountNotice();
 
         Task<DiscountModel> CreateDiscount(DiscountModel discountModel);
@@ -18,6 +20,8 @@ namespace NhaXeNoiBai.Service.Interfaces
 
         Task<bool> DeleteDiscount(Guid id);
         Task UpdateExpiredDiscountAsync();
+        Task<DiscountChartModel> GetDiscountChart();
+
 
     }
 }

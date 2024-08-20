@@ -86,11 +86,8 @@ const LeftNav: React.FC = () => {
 
   return (
     <div className={styles.LeftNav}>
-      <Menu
-        selectedKeys={selectedKey} // Use selectedKeys instead of defaultSelectedKeys
-        mode="inline"
-        items={items}
-      />
+      {/* <div>Nhà xe nội bài</div> */}
+      <Menu selectedKeys={selectedKey} mode="inline" items={items} />
     </div>
   );
 };

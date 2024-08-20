@@ -69,34 +69,42 @@ const TableMobile = <T,>(props: ITable<T>) => {
   };
   return (
     <div>
-      {list.map((item, index) => (
-        <div className={styles.tableForMobile} key={`${index + 1}`}>
-          <div className={styles.tableHeader}>{onRenderHeader(item)}</div>
+      {list.length > 0 ? (
+        <div>
+          {list.map((item, index) => (
+            <div className={styles.tableForMobile} key={`${index + 1}`}>
+              <div className={styles.tableHeader}>{onRenderHeader(item)}</div>
 
-          <div className={styles.tableContent}>
-            <div className={styles.items}>
-              {Array.isArray(body) &&
-                body.map((itemBody, indexBody) => (
-                  <div
-                    className={`${styles.itemGroup} ${
-                      (indexBody + 1) % 2 === 0 && styles.borderLeft
-                    }`}
-                    key={`${indexBody + 1 + index}`}
-                  >
-                    <div className={styles.titleMobile}>
-                      {onRenderValueBody(item, itemBody)}
-                    </div>
-                    <div className={styles.labelMobile}>{itemBody.label}</div>
-                  </div>
-                ))}
+              <div className={styles.tableContent}>
+                <div className={styles.items}>
+                  {Array.isArray(body) &&
+                    body.map((itemBody, indexBody) => (
+                      <div
+                        className={`${styles.itemGroup} ${
+                          (indexBody + 1) % 2 === 0 && styles.borderLeft
+                        }`}
+                        key={`${indexBody + 1 + index}`}
+                      >
+                        <div className={styles.titleMobile}>
+                          {onRenderValueBody(item, itemBody)}
+                        </div>
+                        <div className={styles.labelMobile}>
+                          {itemBody.label}
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </div>
             </div>
-          </div>
+          ))}
+          {pagination && (
+            <div className={styles.mobileTablePagination}>
+              <Pagination {...pagination} />
+            </div>
+          )}
         </div>
-      ))}
-      {pagination && (
-        <div className={styles.mobileTablePagination}>
-          <Pagination {...pagination} />
-        </div>
+      ) : (
+        <div className={styles.emptyText}>Không có bản ghi nào.</div>
       )}
     </div>
   );

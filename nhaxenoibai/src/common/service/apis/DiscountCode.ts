@@ -68,4 +68,23 @@ export const discountCode = {
       throw error;
     }
   },
+
+  async FindDiscountCode(
+    discountCode: string
+  ): Promise<Response.IDefaultResponse> {
+    try {
+      const response = await axiosInstance.post(
+        `/DiscountCode/finDiscountCode?title=${encodeURIComponent(
+          discountCode
+        )}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error(
+        "An error occurred while finding the discount code:",
+        error
+      );
+      throw error;
+    }
+  },
 };

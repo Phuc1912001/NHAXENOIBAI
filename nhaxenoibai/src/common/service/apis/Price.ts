@@ -29,6 +29,16 @@ export const price = {
     }
   },
 
+  async getFullPriceList(): Promise<Response.IDefaultResponse> {
+    try {
+      const response = await axiosInstance.get(`/Price`);
+      return response.data;
+    } catch (error) {
+      console.error("An error occurred while retrieving the customer:", error);
+      throw error;
+    }
+  },
+
   async UpdatePrice(
     priceData: Price.PriceModel
   ): Promise<Response.IDefaultResponse> {

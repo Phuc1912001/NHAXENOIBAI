@@ -1,12 +1,14 @@
 "use client";
 
-import { Affix, Layout } from "antd";
+import { Affix, FloatButton, Layout } from "antd";
 import React from "react";
 import LeftNav from "../LeftNav/LeftNav";
 import LogoAdmin from "../LogoAdmin/LogoAdmin";
 import { useLoading } from "@/common/context/useLoading";
 import LazyLoading from "@/components/LazyLoading/LazyLoading";
 import styles from "./LayoutAdmin.module.scss";
+import HeaderAdmin from "../HeaderAdmin/HeaderAdmin";
+import { ArrowUpOutlined } from "@ant-design/icons";
 const { Header, Content, Sider } = Layout;
 
 const LayoutAdmin = ({ children }: A) => {
@@ -44,13 +46,23 @@ const LayoutAdmin = ({ children }: A) => {
                 borderBottom: `1px solid #EEF2F5`,
               }}
             >
-              header
+              <HeaderAdmin />
             </Header>
           </Affix>
           <Content className={styles.content}>{children}</Content>
         </Layout>
       </Layout>
       {isLoading && <LazyLoading />}
+      <div className={styles.backToTop}>
+        <FloatButton.BackTop
+          visibilityHeight={845}
+          className="flatButton"
+          icon={<ArrowUpOutlined />}
+          onClick={() => {
+            window.scrollTo(0, 0);
+          }}
+        />
+      </div>
     </div>
   );
 };

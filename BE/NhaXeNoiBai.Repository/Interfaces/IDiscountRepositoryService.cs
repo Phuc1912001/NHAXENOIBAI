@@ -21,5 +21,8 @@ namespace NhaXeNoiBai.Repository.Interfaces
         Task UpdateDiscountAsync(DiscountEntity discount);
 
         Task<bool> DeleteDiscount(Guid id);
+
+        Task<DiscountChartModel> GetDiscountChart();
+
     }
 }

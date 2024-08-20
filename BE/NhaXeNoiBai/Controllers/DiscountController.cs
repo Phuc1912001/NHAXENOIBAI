@@ -74,5 +74,20 @@ namespace NhaXeNoiBai.Controllers
             }
         }
 
+        [HttpGet("getDiscountChart")]
+        public async Task<IActionResult> GetDiscountChart()
+        {
+            try
+            {
+                var result = await _discountService.GetDiscountChart();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Lỗi khi lấy danh sách chart khuyến mãi.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Đã xảy ra lỗi khi xử lý yêu cầu.");
+            }
+        }
+
     }
 }

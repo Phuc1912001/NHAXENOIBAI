@@ -14,6 +14,8 @@ namespace NhaXeNoiBai.Service.Interfaces
         Task<PriceModel> CreatePrice(PriceModel priceModel);    
         Task<PriceModel> UpdatePrice(PriceModel priceModel);
         Task<bool> DeletePrice(Guid id);
-        
+
+        Task<BaseDataCollection<PriceModel>> GetFullPriceList();
     }
+
 }

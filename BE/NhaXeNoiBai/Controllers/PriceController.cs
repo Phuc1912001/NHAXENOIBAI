@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NhaXeNoiBai.Model.Model;
+using NhaXeNoiBai.Service.Behaviours;
 using NhaXeNoiBai.Service.Extend;
 using NhaXeNoiBai.Service.Interfaces;
 
@@ -44,5 +45,10 @@ namespace NhaXeNoiBai.Controllers
             return await this.Handle(_logger, () => _priceService.DeletePrice(id));
         }
 
+        [HttpGet]
+        public async Task<BaseResponse<BaseDataCollection<PriceModel>>> GetFullPriceList()
+        {
+            return await this.Handle(_logger, () => _priceService.GetFullPriceList());
+        }
     }
 }

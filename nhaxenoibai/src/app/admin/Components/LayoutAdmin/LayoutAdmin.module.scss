@@ -23,11 +23,18 @@
   }
 }
 
+.backToTop {
+  display: none;
+}
+
 @include media-breakpoint-down(md) {
   .siteLayoutAffix {
     display: none;
   }
   .content {
     padding: 0;
+  }
+  .backToTop {
+    display: flex;
   }
 }

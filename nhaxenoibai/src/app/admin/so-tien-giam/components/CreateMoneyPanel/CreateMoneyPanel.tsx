@@ -11,6 +11,8 @@ import { Button, Drawer, Form, Input, InputNumber } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import ModalDiscard from "@/components/ModalDiscard/ModalDiscard";
 import service from "@/common/service/apis";
+import { useDevice } from "@/common/context/useDevice";
+import { EDeviceType } from "@/common/enum/EDevice";
 
 interface ICreateMoneyPanel {
   getListMoney: () => void;
@@ -32,6 +34,9 @@ const CreateMoneyPanel = (
   );
   const [selectedData, setSelectedData] = useState<Money.MoneyModel>();
   const { showLoading, closeLoading } = useLoading();
+  const { type: typeDevice } = useDevice();
+  const isMobile = typeDevice === EDeviceType.Mobile;
+
   useImperativeHandle(ref, () => ({
     openPanel,
   }));
@@ -131,7 +136,7 @@ const CreateMoneyPanel = (
             )}
           </div>
         }
-        width={520}
+        width={isMobile ? "90%" : 520}
       >
         {type === "Create" || type === "Edit" ? (
           <Form layout="vertical" form={form} onValuesChange={handleFormChange}>

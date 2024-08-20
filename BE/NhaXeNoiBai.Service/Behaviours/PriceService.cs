@@ -63,5 +63,19 @@ namespace NhaXeNoiBai.Service.Behaviours
             var result = await _priceRepositoryService.DeletePrice(id);
             return result;
         }
+
+        public async Task<BaseDataCollection<PriceModel>> GetFullPriceList()
+        {
+            _logger.LogDebug("Entered method GetFullPriceList");
+
+            var result = await _priceRepositoryService.GetFullPriceList();
+            var baseResult = new BaseDataCollection<PriceModel>
+            {
+                BaseDatas = _mapper.Map<List<PriceModel>>(result.BaseDatas)
+            };
+
+            _logger.LogDebug("Leaving method GetFullPriceList");
+            return baseResult;
+        }
     }
 }

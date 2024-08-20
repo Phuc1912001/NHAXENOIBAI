@@ -102,5 +102,19 @@ namespace NhaXeNoiBai.Service.Behaviours
             var result = await _discountCodeRepositoryService.GetListFilterDiscountCode();
             return result;
         }
+
+        public async Task<DiscountChartModel> GetDiscountCodeChart()
+        {
+            var result = await _discountCodeRepositoryService.GetDiscountCodeChart();
+            return result;
+        }
+
+        public async Task<DiscountCodeModel> FindDiscountCode(string title)
+        {
+            var discountModel = await _discountCodeRepositoryService.FindDiscountCode(title);
+            return discountModel;
+        }
     }
+
+   
 }

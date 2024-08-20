@@ -10,6 +10,8 @@ import { useLoading } from "@/common/context/useLoading";
 import { PanelRef } from "../../priceList.model";
 import { Price } from "@/common/service/models/Price";
 import { useNotification } from "@/components/Notification/useNotification";
+import { useDevice } from "@/common/context/useDevice";
+import { EDeviceType } from "@/common/enum/EDevice";
 
 interface ICreatePricePanel {
   getListPrice: () => void;
@@ -30,6 +32,8 @@ const CreatePricePanel = (
   const [type, setType] = useState<string>("Create");
   const [selectedData, setSelectedData] = useState<Price.PriceModel>();
   const notification = useNotification();
+  const { type: typeDevice } = useDevice();
+  const isMobile = typeDevice === EDeviceType.Mobile;
 
   const { showLoading, closeLoading } = useLoading();
 
@@ -132,7 +136,7 @@ const CreatePricePanel = (
             )}
           </div>
         }
-        width={520}
+        width={isMobile ? "90%" : 520}
       >
         {type === "Create" || type === "Edit" ? (
           <Form layout="vertical" form={form} onValuesChange={handleFormChange}>

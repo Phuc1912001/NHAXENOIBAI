@@ -145,9 +145,6 @@ const DiscountCodeFilterPanel = (
               placeholder={["Bắt đầu", "Kết thúc"]}
               style={{ width: "100%" }}
               inputReadOnly={true}
-              showTime
-              showHour
-              showMinute
             />
           </Form.Item>
         );

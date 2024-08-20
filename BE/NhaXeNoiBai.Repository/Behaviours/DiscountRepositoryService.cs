@@ -163,7 +163,10 @@ namespace NhaXeNoiBai.Repository.Behaviours
                 }
             }
 
-            var listDiscount = await query.OrderByDescending(x => x.CreateAt).ToListAsync();
+            var listDiscount = await query.OrderByDescending(x => x.CreateAt)
+                                          .Skip(model.PageInfo.PageSize * (model.PageInfo.PageNo - 1))
+                                          .Take(model.PageInfo.PageSize)
+                                          .ToListAsync();
             var countTotal = await query.CountAsync();
 
             var result = new BaseDataCollection<DiscountEntity>();
@@ -243,6 +246,50 @@ namespace NhaXeNoiBai.Repository.Behaviours
                 EndTime = query?.EndTime,
             };
             return result;
+        }
+
+        public async Task<DiscountChartModel> GetDiscountChart()
+        {
+            var query = _context.DiscountEntities.AsQueryable();
+
+            // Fetch statuses and counts from the database
+            var groupedData = await query.GroupBy(dc => dc.Status)
+                                         .Select(g => new
+                                         {
+                                             Status = g.Key,
+                                             Count = g.Count()
+                                         }).ToListAsync();
+
+            // Transform data in-memory using RenderStatus
+            var legenData = groupedData.Select(g => RenderStatus(g.Status)).Distinct().ToList();
+            var seriesData = groupedData.Select(g => new SeriesData
+            {
+                Value = g.Count,
+                Name = RenderStatus(g.Status)
+            }).ToList();
+
+            var discountChartModel = new DiscountChartModel
+            {
+                LegenData = legenData,
+                SeriesDatas = seriesData
+            };
+
+            return discountChartModel;
+        }
+
+        public string RenderStatus(int? status)
+        {
+            switch (status)
+            {
+                case (int)DiscountCodeStatusEnum.Active:
+                    return "Hoạt động";
+                case (int)DiscountCodeStatusEnum.Expired:
+                    return "Hết hạn";
+                case (int)DiscountCodeStatusEnum.PendingActive:
+                    return "Chờ hoạt động";
+                default:
+                    return "Trạng thái không xác định";
+            }
         }
     }
 }
