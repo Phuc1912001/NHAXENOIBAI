@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NhaXeNoiBai.Model.Entities;
 using NhaXeNoiBai.Model.Enums;
+using NhaXeNoiBai.Model.Exceptions;
 using NhaXeNoiBai.Model.Model;
 using NhaXeNoiBai.Repository.Interfaces;
 using System;
@@ -205,6 +206,81 @@ namespace NhaXeNoiBai.Repository.Behaviours
                 Status = discountCodeStatus
             };
             return dataFilter;
+        }
+
+        public async Task<DiscountChartModel> GetDiscountCodeChart()
+        {
+            var query = _context.DiscountCodeEntities.AsQueryable();
+
+            // Fetch statuses and counts from the database
+            var groupedData = await query.GroupBy(dc => dc.Status)
+                                         .Select(g => new
+                                         {
+                                             Status = g.Key,
+                                             Count = g.Count()
+                                         }).ToListAsync();
+
+            // Transform data in-memory using RenderStatus
+            var legenData = groupedData.Select(g => RenderStatus(g.Status)).Distinct().ToList();
+            var seriesData = groupedData.Select(g => new SeriesData
+            {
+                Value = g.Count,
+                Name = RenderStatus(g.Status)
+            }).ToList();
+
+            var discountChartModel = new DiscountChartModel
+            {
+                LegenData = legenData,
+                SeriesDatas = seriesData
+            };
+
+            return discountChartModel;
+        }
+
+        public string RenderStatus(int? status)
+        {
+            switch (status)
+            {
+                case (int)DiscountCodeStatusEnum.Active:
+                    return "Hoạt động";
+                case (int)DiscountCodeStatusEnum.Expired:
+                    return "Hết hạn";
+                case (int)DiscountCodeStatusEnum.PendingActive:
+                    return "Chờ hoạt động";
+                default:
+                    return "Trạng thái không xác định";
+            }
+        }
+
+        public async Task<DiscountCodeModel> FindDiscountCode(string title)
+        {
+            var listMoney = await _context.MoneyEntities.ToListAsync();
+
+            var discountCodeEntity = await _context.DiscountCodeEntities
+                .Where(x => x.Title == title)
+                .FirstOrDefaultAsync();
+
+            if (discountCodeEntity == null)
+            {
+                throw new DiscountException("Mã giảm giá này không tồn tại.");
+            }
+
+            var discountCodeModel = new DiscountCodeModel
+            {
+                Id = discountCodeEntity.Id,
+                Title = discountCodeEntity.Title,
+                DiscountCodeNumber = discountCodeEntity.DiscountCodeNumber,
+                Description = discountCodeEntity.Description,
+                StartTime = discountCodeEntity.StartTime,
+                EndTime = discountCodeEntity.EndTime,
+                Status = discountCodeEntity.Status,
+                DiscountCodeMoney = listMoney
+                    .Where(m => m.Id.ToString() == discountCodeEntity.DiscountCodeNumber)
+                    .Select(y => y.Money)
+                    .FirstOrDefault() ?? 0
+            };
+
+            return discountCodeModel;
         }
 
     }

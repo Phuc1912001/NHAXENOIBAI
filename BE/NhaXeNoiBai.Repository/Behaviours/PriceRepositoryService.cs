@@ -20,8 +20,23 @@ namespace NhaXeNoiBai.Repository.Behaviours
         }
         public async Task<BaseDataCollection<PriceEntity>> GetListPrice(DataGridModel model)
         {
-            var listPrice = await _context.PriceEntities.ToListAsync();
-            var countTotal = await _context.PriceEntities.CountAsync();
+            var query =  _context.PriceEntities.AsQueryable();
+
+            var search = model.SearchInfo.SearchRule;
+            if (search.Any())
+            {
+                var searchItem = search.First().KeyWord;
+                if (!string.IsNullOrEmpty(searchItem?.Trim()))
+                {
+                    query = query.Where(x => x.CarType != null && x.CarType.Contains(searchItem));
+                }
+            }
+            var listPrice = await query.OrderByDescending(x => x.FromHanoiToNoiBai)
+                                          .Skip(model.PageInfo.PageSize * (model.PageInfo.PageNo - 1))
+                                          .Take(model.PageInfo.PageSize)
+                                          .ToListAsync();
+
+            var countTotal = await query.CountAsync();
 
             var result = new BaseDataCollection<PriceEntity>();
             result.BaseDatas = listPrice;
@@ -79,6 +94,12 @@ namespace NhaXeNoiBai.Repository.Behaviours
             return true;
         }
 
-
+        public async Task<BaseDataCollection<PriceEntity>> GetFullPriceList()
+        {
+            var listPrice = await _context.PriceEntities.OrderBy(x => x.FromHanoiToNoiBai).ToListAsync();   
+            var result = new BaseDataCollection<PriceEntity>();
+            result.BaseDatas = listPrice;
+            return result;
+        }
     }
 }

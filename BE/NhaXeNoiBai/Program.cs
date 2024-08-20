@@ -28,6 +28,8 @@ builder.Services.AddScoped<IDiscountCodeService, DiscountCodeService>();
 builder.Services.AddScoped<IDiscountCodeRepositoryService, DiscountCodeRespositoryService>();
 builder.Services.AddScoped<IMoneyService, MoneyService>();
 builder.Services.AddScoped<IMoneyRepositoryService, MoneyRepositoryService>();
+builder.Services.AddScoped<IBookCarService, BookCarService>();
+builder.Services.AddScoped<IBookCarRespositoryService, BookCarRespositoryService>();
 builder.Services.AddHostedService<DiscountCodeBackgroundService>();
 builder.Services.AddControllers();
 builder.Services.AddHttpClient();

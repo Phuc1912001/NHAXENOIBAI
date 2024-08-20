@@ -11,6 +11,9 @@
   background-color: #ffffff;
   z-index: 1000;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  @include media-breakpoint-down(md) {
+    display: none;
+  }
   .wrapperLeft {
     display: flex;
     align-items: center;
@@ -180,6 +183,120 @@
 
     .iconLogout {
       transition: margin-left 0.3s ease; /* Hiệu ứng di chuyển khoảng cách */
+    }
+  }
+}
+
+.wrapperHeaderMobile {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 15px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #ffffff;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  @include media-breakpoint-up(md) {
+    display: none;
+  }
+}
+
+.mobileLeftNav {
+  :global {
+    .ant-drawer-body {
+      padding: 8px !important;
+    }
+  }
+
+  .wraperItemMobile {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    gap: 10px;
+    padding-top: 10px;
+    margin-top: 10px;
+    border-top: 1px solid rgb(214, 213, 213);
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgb(214, 213, 213);
+
+    .itemHomeMobile {
+      padding: 0px 10px 0px 5px;
+      height: 40px;
+      width: 100%;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      color: black;
+      &:hover {
+        background-color: #dcf7ff;
+      }
+    }
+    .activeHomeMobile {
+      background-color: #dcf7ff;
+    }
+
+    .itemPriceMobile {
+      padding: 0px 10px 0px 5px;
+      height: 40px;
+      width: 100%;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      color: black;
+      &:hover {
+        background-color: #ffe3f2;
+      }
+    }
+    .activePriceMobile {
+      background-color: #ffe3f2;
+    }
+
+    .itemDiscountMobile {
+      padding: 0px 10px 0px 10px;
+      height: 40px;
+      width: 100%;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      color: black;
+      gap: 5px;
+      &:hover {
+        background-color: #ffeedf;
+      }
+    }
+    .activeDiscountMobile {
+      background-color: #ffeedf;
+    }
+
+    .itemPolicyMobile {
+      padding: 0px 10px 0px 10px;
+      height: 40px;
+      width: 100%;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      color: black;
+      gap: 5px;
+      &:hover {
+        background-color: #f9f1ff;
+      }
+    }
+    .activePolicyMobile {
+      background-color: #f9f1ff;
     }
   }
 }

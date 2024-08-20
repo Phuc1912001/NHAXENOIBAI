@@ -15,6 +15,8 @@ namespace NhaXeNoiBai.Model.Model
         public string? Description { get; set; }
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }
+
+        public int? DiscountCodeMoney { get; set; }
         public int? Status { get; set; }
     }
 }

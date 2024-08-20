@@ -1,0 +1,48 @@
+.wrapperHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  .wrapperTitle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    .title {
+      font-size: 14px;
+      line-height: 19px;
+      font-weight: 600;
+      color: #00aaff;
+      word-break: break-word;
+      text-overflow: ellipsis;
+      display: -webkit-box !important;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      cursor: pointer;
+      &:hover {
+        text-decoration: underline;
+      }
+      &:active a {
+        color: #00aaff;
+      }
+    }
+  }
+
+  .wrapperIcon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+}
+
+.wrapperEdit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 4px;
+}
+

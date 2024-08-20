@@ -1,13 +1,12 @@
 "use client";
+import { DeviceProvider } from "@/common/context/useDevice";
 import { LoadingProvider } from "@/common/context/useLoading";
-import StyledComponentsRegistry from "@/lib/AntdRegistry";
+import "@/common/scss/index.scss";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { Outfit } from "next/font/google";
 import { FC } from "react";
 import LayoutAdmin from "./Components/LayoutAdmin/LayoutAdmin";
 import "./globals.css";
-import { AntdRegistry } from "@ant-design/nextjs-registry";
-import { DeviceProvider } from "@/common/context/useDevice";
-import "@/common/scss/index.scss";
 
 const outfit = Outfit({ subsets: ["latin"] });
 

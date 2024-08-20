@@ -1,0 +1,11 @@
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.item {
+  max-width: 100px;
+  white-space: normal;
+  word-break: break-word;
+  margin-right: 8px;
+}

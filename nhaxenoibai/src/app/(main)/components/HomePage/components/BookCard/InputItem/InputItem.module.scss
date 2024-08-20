@@ -1,0 +1,15 @@
+.wraperInput {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding-top: 10px;
+  border-radius: 5px;
+
+  // background-color: rgb(246, 245, 245);
+}
+
+.errorMessage {
+  margin-top: 4px;
+  margin-left: 28px;
+  color: #ff4d4f;
+}

@@ -77,7 +77,10 @@ namespace NhaXeNoiBai.Repository.Behaviours
                     query = query.Where(x => x.Title != null && x.Title.Contains(searchItem));
                 }
             }
-            var listMoney = await query.OrderBy(x => x.Money).ToListAsync();
+            var listMoney = await query.OrderBy(x => x.Money)
+                                       .Skip(model.PageInfo.PageSize * (model.PageInfo.PageNo - 1))
+                                       .Take(model.PageInfo.PageSize)
+                                       .ToListAsync();
             var countTotal = await query.CountAsync();
             var result = new BaseDataCollection<MoneyEntity>();
             result.BaseDatas = listMoney;
@@ -95,5 +98,8 @@ namespace NhaXeNoiBai.Repository.Behaviours
             result.BaseDatas = listMoney;
             return result;
         }
+
+
+
     }
 }

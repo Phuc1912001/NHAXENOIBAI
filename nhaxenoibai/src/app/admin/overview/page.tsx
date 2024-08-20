@@ -3,6 +3,7 @@ import { Col, Row } from "antd";
 import React from "react";
 import styles from "./overview.module.scss";
 import ReactECharts from "echarts-for-react";
+import MobileHeader from "../Components/MobileHeader/MobileHeader";
 
 const page = () => {
   const option = {
@@ -87,23 +88,26 @@ const page = () => {
   };
   return (
     <div>
-      <Row gutter={[16, 16]}>
-        <Col xs={24}>
-          <div className={styles.wrapperCard}>
-            <ReactECharts option={optionLine} />
-          </div>
-        </Col>
-        <Col xs={24} md={12}>
-          <div className={styles.wrapperCard}>
-            <ReactECharts option={option} />
-          </div>
-        </Col>
-        <Col xs={24} md={12}>
-          <div className={styles.wrapperCard}>
-            <ReactECharts option={option} />
-          </div>
-        </Col>
-      </Row>
+      <MobileHeader title="Tổng Quan"></MobileHeader>
+      <div className={styles.wrapperContent}>
+        <Row gutter={[16, 16]}>
+          <Col xs={24}>
+            <div className={styles.wrapperCard}>
+              <ReactECharts option={optionLine} />
+            </div>
+          </Col>
+          <Col xs={24} md={12}>
+            <div className={styles.wrapperCard}>
+              <ReactECharts option={option} />
+            </div>
+          </Col>
+          <Col xs={24} md={12}>
+            <div className={styles.wrapperCard}>
+              <ReactECharts option={option} />
+            </div>
+          </Col>
+        </Row>
+      </div>
     </div>
   );
 };

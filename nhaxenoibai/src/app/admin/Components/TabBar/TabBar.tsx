@@ -12,29 +12,45 @@ interface ITabBar {
   onSearch?: (value: string) => void;
   placeholderSearch?: string;
   handleOpenFilter?: () => void;
+  hasFilter?: boolean;
+  hasCreate?: boolean;
 }
 
 const TabBar = (props: ITabBar) => {
-  const { openPanel, btnText, onSearch, placeholderSearch, handleOpenFilter } =
-    props;
+  const {
+    openPanel,
+    btnText,
+    onSearch,
+    placeholderSearch,
+    handleOpenFilter,
+    hasFilter = true,
+    hasCreate = true,
+  } = props;
   const { type } = useDevice();
   const isMobile = type === EDeviceType.Mobile;
 
   return (
     <div className={styles.wrapperTabBar}>
       <div className={styles.wrapperLeftSide}>
-        <Button icon={<PlusCircleOutlined />} onClick={() => openPanel?.()}>
-          {btnText}
-        </Button>
-        <Tooltip
-          title={isMobile ? "" : <span style={{ color: "#222" }}>Bộ Lọc</span>}
-          color={"#fff"}
-        >
-          <Button
-            icon={<FilterOutlined />}
-            onClick={() => handleOpenFilter?.()}
-          ></Button>
-        </Tooltip>
+        {hasCreate && (
+          <Button icon={<PlusCircleOutlined />} onClick={() => openPanel?.()}>
+            {btnText}
+          </Button>
+        )}
+
+        {hasFilter && (
+          <Tooltip
+            title={
+              isMobile ? "" : <span style={{ color: "#222" }}>Bộ Lọc</span>
+            }
+            color={"#fff"}
+          >
+            <Button
+              icon={<FilterOutlined />}
+              onClick={() => handleOpenFilter?.()}
+            ></Button>
+          </Tooltip>
+        )}
       </div>
 
       <div className={styles.wrapperRightSide}>

@@ -121,5 +121,11 @@ namespace NhaXeNoiBai.Service.Behaviours
             var result = await _discountRepositoryService.GetDiscountNotice();
             return result;
         }
+
+        public async Task<DiscountChartModel> GetDiscountChart()
+        {
+            var result = await _discountRepositoryService.GetDiscountChart();
+            return result;
+        }
     }
 }

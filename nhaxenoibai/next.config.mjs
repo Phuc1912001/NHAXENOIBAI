@@ -12,6 +12,7 @@ const nextConfig = {
   images: {
     domains: ['nhaxesanbay.s3.amazonaws.com'],
   },
+  reactStrictMode: false
 };
 
 export default nextConfig;
