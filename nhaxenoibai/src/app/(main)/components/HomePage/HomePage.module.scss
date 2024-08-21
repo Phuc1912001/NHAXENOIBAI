@@ -1,0 +1,5 @@
+.wrapperBookCar {
+  @include media-breakpoint-up(lg) {
+    padding: 0 70px 0px 70px;
+  }
+}

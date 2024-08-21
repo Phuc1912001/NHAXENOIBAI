@@ -9,6 +9,7 @@ import { TabBookCar } from "./components/BookCard/bookCard.model";
 import { MapCard } from "./components/MapCard/MapCard";
 import { DeviceProvider } from "@/common/context/useDevice";
 import { LoadingProvider } from "@/common/context/useLoading";
+import styles from "./HomePage.module.scss";
 
 const HomePage = () => {
   const [origin, setOrigin] = useState<A>();
@@ -19,7 +20,7 @@ const HomePage = () => {
   const [activeTab, setActiveTab] = useState<number>(TabBookCar.airport);
 
   return (
-    <div>
+    <div className={styles.wrapperBookCar}>
       <DeviceProvider>
         <LoadingProvider>
           <OriginContext.Provider

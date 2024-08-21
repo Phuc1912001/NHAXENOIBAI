@@ -9,6 +9,7 @@ namespace NhaXeNoiBai.Model.Entities
     public class PriceEntity : BaseEntity
     {
         public string? CarType { get; set; }
+        public string? MoneyKm { get; set; }
         public string? FromHanoiToNoiBai { get; set; }
         public string? FromNoiBaiToHanoi { get; set; }
         public string? ToWay { get; set; }

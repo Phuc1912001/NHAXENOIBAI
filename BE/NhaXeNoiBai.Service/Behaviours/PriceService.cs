@@ -16,12 +16,14 @@ namespace NhaXeNoiBai.Service.Behaviours
     {
         private readonly ILogger<PriceService> _logger;
         private readonly IPriceRepositoryService _priceRepositoryService;
+        private readonly IMoneyService _moneyService;
         private readonly IMapper _mapper;
-        public PriceService(ILogger<PriceService> logger, IPriceRepositoryService priceRepositoryService, IMapper mapper)
+        public PriceService(ILogger<PriceService> logger, IPriceRepositoryService priceRepositoryService, IMapper mapper, IMoneyService moneyService)
         {
             this._logger = logger;
             this._priceRepositoryService = priceRepositoryService;
             this._mapper = mapper;
+            _moneyService = moneyService;
         }
 
         public async Task<BaseDataCollection<PriceModel>> GetListPrice(DataGridModel model)
@@ -29,12 +31,26 @@ namespace NhaXeNoiBai.Service.Behaviours
             _logger.LogDebug("Entered method GetListPrice");
 
             var result = await _priceRepositoryService.GetListPrice(model);
+            var listMoney = await _moneyService.GetFullListMoney();
+
+            var resultList = result.BaseDatas.Select(p =>
+           new PriceModel
+           {
+               Id = p.Id,
+               CarType = p.CarType,
+               FromHanoiToNoiBai = p.FromHanoiToNoiBai,
+               FromNoiBaiToHanoi = p.FromNoiBaiToHanoi,
+               ToWay = p.ToWay,
+               MoneyKm = p.MoneyKm,
+               Money = listMoney.BaseDatas.Where(m => m.Id.ToString() == p.MoneyKm).Select(x => x.Money).FirstOrDefault(),
+               MoneyTitle = listMoney.BaseDatas.Where(m => m.Id.ToString() == p.MoneyKm).Select(x => x.Title).FirstOrDefault(),
+           }).ToList();
             var baseResult = new BaseDataCollection<PriceModel>
             {
                 TotalRecordCount = result.TotalRecordCount,
                 PageCount = result.PageCount,
                 PageIndex = result.PageIndex,
-                BaseDatas = _mapper.Map<List<PriceModel>>(result.BaseDatas)
+                BaseDatas = resultList
             };
 
             _logger.LogDebug("Leaving method GetListPrice");
@@ -69,9 +85,23 @@ namespace NhaXeNoiBai.Service.Behaviours
             _logger.LogDebug("Entered method GetFullPriceList");
 
             var result = await _priceRepositoryService.GetFullPriceList();
+            var listMoney = await _moneyService.GetFullListMoney();
+
+            var resultList = result.BaseDatas.Select(p =>
+            new PriceModel
+            {
+                Id = p.Id,
+                CarType = p.CarType,
+                FromHanoiToNoiBai = p.FromHanoiToNoiBai,
+                FromNoiBaiToHanoi = p.FromNoiBaiToHanoi,
+                ToWay = p.ToWay,
+                MoneyKm = p.MoneyKm,
+                Money = listMoney.BaseDatas.Where(m => m.Id.ToString() == p.MoneyKm).Select(x => x.Money).FirstOrDefault(),
+                MoneyTitle = listMoney.BaseDatas.Where(m => m.Id.ToString() == p.MoneyKm).Select(x => x.Title).FirstOrDefault(),
+            }).ToList();
             var baseResult = new BaseDataCollection<PriceModel>
             {
-                BaseDatas = _mapper.Map<List<PriceModel>>(result.BaseDatas)
+                BaseDatas = _mapper.Map<List<PriceModel>>(resultList)
             };
 
             _logger.LogDebug("Leaving method GetFullPriceList");

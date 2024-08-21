@@ -29,7 +29,10 @@ const Header = () => {
       <div className={styles.wrapperCart}>Thông tin tài khoản</div>
       <div className={styles.wrapperCart}>Chuyến xe của tôi </div>
       <div className={styles.wrapperCart}>
-        <Link href={"/admin/overview"}> Quản Lý Nhà Xe</Link>
+        <Link href={"/admin/overview"} style={{ color: "black" }}>
+          {" "}
+          Quản Lý Nhà Xe
+        </Link>
       </div>
       <hr className="mt-2 mb-2" />
       <div className={styles.wrapperLogout}>

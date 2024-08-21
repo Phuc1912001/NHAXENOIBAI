@@ -2,13 +2,18 @@
 import { OriginContext } from "@/common/context/originContext";
 import service from "@/common/service/apis";
 import { Price } from "@/common/service/models/Price";
-import { DeleteOutlined, TruckOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  InfoCircleFilled,
+  TruckOutlined,
+} from "@ant-design/icons";
 import {
   Button,
   Col,
   DatePicker,
   Form,
   Input,
+  Modal,
   Row,
   Select,
   Space,
@@ -22,22 +27,18 @@ import dayjs from "dayjs";
 import { useContext, useEffect, useState } from "react";
 import styles from "./BookCard.module.scss";
 import InputItem from "./InputItem/InputItem";
-import { InputEnum, TabBookCar } from "./bookCard.model";
+import { InputEnum, PlaceOption, TabBookCar } from "./bookCard.model";
 import { useLoading } from "@/common/context/useLoading";
 import { useNotification } from "@/components/Notification/useNotification";
 import { BookCar } from "@/common/service/models/BookCarModel";
+import ModalInforBookCar from "./ModalInforBookCar/ModalInforBookCar";
 
 // Define the interface
-interface PlaceOption {
-  value: {
-    place_id: string;
-  };
-  label: string;
-}
 
 interface IOptionValue {
   label?: string;
   value?: string | number;
+  money?: number;
 }
 
 const BookCard = () => {
@@ -76,6 +77,9 @@ const BookCard = () => {
 
   const [totalAmount, setTotalAmount] = useState<number>(0);
   const [totalMoney, setTotalMoney] = useState<number>(0);
+  const [carType, setCarType] = useState<number>(9);
+
+  const [openModal, setOpenModal] = useState<boolean>(false);
 
   const getFullPriceList = async () => {
     try {
@@ -84,6 +88,7 @@ const BookCard = () => {
       let newData = result.baseDatas.map((item: Price.PriceModel) => ({
         label: item.carType,
         value: item.id,
+        money: item?.money,
       }));
       if (newData.length > 0) {
         form.setFieldValue("carType", newData[0].value);
@@ -130,38 +135,40 @@ const BookCard = () => {
   };
 
   const handleSubmit = async () => {
-    if (!originValue) {
-      setIsOriginInvalid(true);
-    } else {
-      setIsOriginInvalid(false);
-    }
-
-    if (!destinationValue) {
-      setIsDestinationInvalid(true);
-    } else {
-      setIsDestinationInvalid(false);
-    }
-    await form.validateFields();
     const value = form.getFieldsValue();
 
     const payload: BookCar.BookCarModel = {
-      origin: origin.label,
-      destination: destination.label,
+      origin: origin?.label,
+      destination: destination?.label,
       duration: duration,
       distantce: distance,
       twoWay: twoWay,
-      startTime: value.startTime,
-      fullName: value.fullName,
-      phoneNumber: value.phoneNumber,
-      note: value.note,
-      discountCode: value.discountCode,
-      totalNumber: totalAmount,
+      startTime: value?.startTime,
+      fullName: value?.fullName,
+      phoneNumber: value?.phoneNumber,
+      note: value?.note,
+      discountCode: value?.discountCode,
+      totalNumber: totalMoney,
     };
 
     try {
+      showLoading("bookCar");
       const { result } = await service.bookCar.createBookCar(payload);
-      console.log("result", result);
-    } catch (error) {}
+      resetForm();
+      setOpenModal(false);
+      setOriginValue(null);
+      if (destination) {
+        setDestinationValue({
+          value: {
+            place_id: destination.place_id,
+          },
+          label: destination.label,
+        });
+      }
+      closeLoading("bookCar");
+    } catch (error) {
+      closeLoading("bookCar");
+    }
   };
 
   const swapLocations = () => {
@@ -234,11 +241,16 @@ const BookCard = () => {
       startDate: dayjs(),
       startTime: dayjs(),
       carType: optionPrice[0]?.value,
+      discountCode: "",
+      note: "",
     });
     setOrigin(null);
     setDestination(null);
     setDistance(0);
     setDuration("");
+    setTotalAmount(0);
+    setTotalMoney(0);
+    setDiscountMoney(0);
   };
   const handleChangeTab = (tab: number) => {
     setActiveTab(tab);
@@ -274,14 +286,14 @@ const BookCard = () => {
   };
 
   useEffect(() => {
-    setTotalAmount(distance * 10);
+    setTotalAmount(distance * carType);
 
     if (twoWay) {
       setTotalAmount((prev) => prev * 2);
     } else {
-      setTotalAmount(distance * 10);
+      setTotalAmount(distance * carType);
     }
-  }, [distance, twoWay]);
+  }, [distance, twoWay, carType]);
 
   useEffect(() => {
     if (discountMoney) {
@@ -290,6 +302,34 @@ const BookCard = () => {
       setTotalMoney(totalAmount);
     }
   }, [totalAmount, discountMoney]);
+
+  const handleChangeCartype = (value: string | number) => {
+    const selectedOption = optionPrice.find((option) => option.value === value);
+    const selectedMoney = selectedOption?.money
+      ? selectedOption.money / 1000
+      : 0;
+    setCarType(selectedMoney);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
+  const handleOpenBookCarInfor = async () => {
+    if (!originValue) {
+      setIsOriginInvalid(true);
+    } else {
+      setIsOriginInvalid(false);
+    }
+
+    if (!destinationValue) {
+      setIsDestinationInvalid(true);
+    } else {
+      setIsDestinationInvalid(false);
+    }
+    await form.validateFields();
+    setOpenModal(true);
+  };
 
   return (
     <Spin spinning={isLoading}>
@@ -380,6 +420,7 @@ const BookCard = () => {
                 <Select
                   placeholder="Chọn loại số tiền"
                   options={optionPrice}
+                  onChange={(money: A) => handleChangeCartype(money)}
                   showSearch
                   filterOption={filterOption}
                 />
@@ -538,12 +579,15 @@ const BookCard = () => {
               {totalAmount.toLocaleString("vi-VN")} đ
             </div>
           </div>
-          {discountMoney && (
-            <div className={styles.wrapperDiscountCode}>
-              <div>Số tiền giảm:</div>
-              <div>{discountMoney.toLocaleString("vi-VN")} đ</div>
-            </div>
-          )}
+          {discountMoney !== undefined &&
+            discountMoney !== null &&
+            discountMoney > 0 && (
+              <div className={styles.wrapperDiscountCode}>
+                <div>Số tiền giảm:</div>
+                <div>{discountMoney.toLocaleString("vi-VN")} đ</div>
+              </div>
+            )}
+
           <div className={styles.wrapperTotalMoney}>
             <div>Đơn giá:</div>
             <div>{totalMoney.toLocaleString("vi-VN")} đ</div>
@@ -555,12 +599,25 @@ const BookCard = () => {
               className={styles.btnBookCar}
               icon={<TruckOutlined />}
               iconPosition="end"
+              onClick={handleOpenBookCarInfor}
             >
-              ĐẶT XE
+              Đặt Xe
             </Button>
           </div>
         </Form>
       </div>
+      <ModalInforBookCar
+        openModal={openModal}
+        handleCloseModal={handleCloseModal}
+        handleSubmit={handleSubmit}
+        originValue={originValue}
+        destinationValue={destinationValue}
+        duration={duration}
+        distance={distance}
+        valueForm={form.getFieldsValue()}
+        twoWay={twoWay}
+        totalMoney={totalMoney}
+      />
     </Spin>
   );
 };

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NhaXeNoiBai.Model.Model;
 
@@ -11,9 +12,10 @@ using NhaXeNoiBai.Model.Model;
 namespace NhaXeNoiBai.Model.Migrations
 {
     [DbContext(typeof(TranportDBContext))]
-    partial class TranportDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240820083539_updatePriceentity")]
+    partial class updatePriceentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -190,8 +192,8 @@ namespace NhaXeNoiBai.Model.Migrations
                     b.Property<string>("FromNoiBaiToHanoi")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("MoneyKm")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("MoneyKm")
+                        .HasColumnType("int");
 
                     b.Property<string>("ToWay")
                         .HasColumnType("nvarchar(max)");

@@ -6,5 +6,8 @@ declare namespace Price {
     fromHanoiToNoiBai?: string;
     fromNoiBaiToHanoi?: string;
     toWay?: string;
+    moneyKm?: string;
+    money?: number;
+    moneyTitle?: string;
   }
 }
