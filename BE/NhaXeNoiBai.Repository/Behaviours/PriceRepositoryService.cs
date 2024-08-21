@@ -74,6 +74,8 @@ namespace NhaXeNoiBai.Repository.Behaviours
             existingEntity.CarType = price.CarType;
             existingEntity.FromHanoiToNoiBai = price.FromHanoiToNoiBai;
             existingEntity.FromNoiBaiToHanoi = price.FromNoiBaiToHanoi;
+            existingEntity.CarType = price.CarType;
+            existingEntity.MoneyKm = price.MoneyKm;
             existingEntity.ToWay = price.ToWay;
             existingEntity.UpdateAt = DateTime.Now;
             _context.PriceEntities.Update(existingEntity);  

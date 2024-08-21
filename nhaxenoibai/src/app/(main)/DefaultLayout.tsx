@@ -7,7 +7,7 @@ const DefaultLayout = ({ children }: A) => {
   return (
     <div>
       <Header />
-      <div className="mt-16 p-3 md:mt-24 md:p-5">
+      <div className="mt-16 p-3 md:mt-16 lg:mt-24">
         {children}
         <GroupIcons />
       </div>

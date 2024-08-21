@@ -1,6 +1,5 @@
 import React, { forwardRef, useImperativeHandle, useState } from "react";
-import styles from "./CreatePricePanel.module.scss";
-import { Button, Drawer, Form, Input, Modal } from "antd";
+import { Button, Drawer, Form, Input, Modal, Select } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import { useForm } from "antd/es/form/Form";
 import { useUnsavedChanges } from "@/common/hook/useUnsavedChanges";
@@ -12,9 +11,15 @@ import { Price } from "@/common/service/models/Price";
 import { useNotification } from "@/components/Notification/useNotification";
 import { useDevice } from "@/common/context/useDevice";
 import { EDeviceType } from "@/common/enum/EDevice";
+import { Money } from "@/common/service/models/Money";
 
 interface ICreatePricePanel {
   getListPrice: () => void;
+}
+
+interface IOptionValue {
+  label?: string;
+  value?: string | number;
 }
 
 const CreatePricePanel = (
@@ -35,11 +40,28 @@ const CreatePricePanel = (
   const { type: typeDevice } = useDevice();
   const isMobile = typeDevice === EDeviceType.Mobile;
 
+  const [optionMoney, setOptionMoney] = useState<IOptionValue[]>([]);
+
   const { showLoading, closeLoading } = useLoading();
 
   useImperativeHandle(ref, () => ({
     openPanel,
   }));
+
+  const getFullListMoney = async () => {
+    try {
+      showLoading("GetFullListMoney");
+      const { result } = await service.money.getFullListMoney();
+      let newData = result.baseDatas.map((item: Money.MoneyModel) => ({
+        label: item.title,
+        value: item.id,
+      }));
+      setOptionMoney(newData);
+      closeLoading("GetFullListMoney");
+    } catch (error) {
+      closeLoading("GetFullListMoney");
+    }
+  };
 
   const openPanel = (data?: Price.PriceModel, type?: string) => {
     setIsOpenPanel(true);
@@ -48,6 +70,7 @@ const CreatePricePanel = (
       form.setFieldsValue(data);
       setSelectedData(data);
     }
+    getFullListMoney();
   };
 
   const handleClose = () => {
@@ -100,6 +123,10 @@ const CreatePricePanel = (
     }
   };
 
+  const filterOption = (input: string, option?: IOptionValue) =>
+    (option?.label ?? "").toLowerCase().includes(input.toLowerCase()) ||
+    ((option as any)?.email || "").toLowerCase().includes(input.toLowerCase());
+
   return (
     <div>
       <Drawer
@@ -146,6 +173,24 @@ const CreatePricePanel = (
               label="Loại Xe :"
             >
               <Input maxLength={200} />
+            </Form.Item>
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng điền số tiền giảm.",
+                },
+              ]}
+              name="moneyKm"
+              label="Tiền/Km:"
+            >
+              <Select
+                // rootClassName={styles.emFilterSelectMultiple}
+                placeholder="Chọn loại số tiền"
+                options={optionMoney}
+                showSearch
+                filterOption={filterOption}
+              />
             </Form.Item>
 
             <Form.Item

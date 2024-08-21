@@ -7,3 +7,9 @@ export enum TabBookCar {
   airport = 1,
   road,
 }
+export interface PlaceOption {
+  value: {
+    place_id: string;
+  };
+  label: string;
+}

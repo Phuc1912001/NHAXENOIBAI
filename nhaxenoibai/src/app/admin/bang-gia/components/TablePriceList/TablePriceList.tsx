@@ -36,6 +36,12 @@ const TablePriceList = (props: ITablePriceList) => {
       ),
     },
     {
+      title: "Giá tiền/Km",
+      dataIndex: "moneyTitle",
+      key: "moneyTitle",
+      render: (_, record) => <div>{record.moneyTitle}</div>,
+    },
+    {
       title: "Hà Nội -> Nội Bài ",
       dataIndex: "fromHanoiToNoiBai",
       key: "fromHanoiToNoiBai",
