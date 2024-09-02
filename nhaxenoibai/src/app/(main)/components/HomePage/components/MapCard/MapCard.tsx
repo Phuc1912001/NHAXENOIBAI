@@ -6,7 +6,7 @@ import { EDeviceType } from "@/common/enum/EDevice";
 
 export function MapCard() {
   const [map, setMap] = useState<google.maps.Map | null>(null);
-  const { origin, destination, setDuration, setDistance, activeTab } =
+  const { origin, destination, setDuration, setDistance } =
     useContext(OriginContext);
   const [directionRoutePoint, setDirectionRoutePoint] =
     useState<google.maps.DirectionsResult | null>(null);
@@ -46,11 +46,10 @@ export function MapCard() {
           setDistance(result?.routes[0].legs[0].distance?.value || null);
         } else {
           console.error("Error fetching directions", status);
-          setDirectionRoutePoint(null);
         }
       }
     );
-  }, [origin, destination, activeTab, setDistance, setDuration]);
+  }, [origin, destination, setDistance, setDuration]);
 
   useEffect(() => {
     if (origin && origin.lat && origin.lng && map) {
@@ -58,9 +57,11 @@ export function MapCard() {
         lat: origin.lat,
         lng: origin.lng,
       });
+    } else {
+      setDirectionRoutePoint(null);
     }
     directionRoute();
-  }, [origin, map, directionRoute, activeTab]);
+  }, [origin, map, directionRoute]);
 
   useEffect(() => {
     if (destination && destination.lat && destination.lng && map) {
@@ -68,9 +69,11 @@ export function MapCard() {
         lat: destination.lat,
         lng: destination.lng,
       });
+    } else {
+      setDirectionRoutePoint(null);
     }
     directionRoute();
-  }, [destination, map, directionRoute, activeTab]);
+  }, [destination, map, directionRoute]);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -119,7 +122,7 @@ export function MapCard() {
           options={{
             suppressMarkers: true,
             polylineOptions: {
-              strokeColor: "#1677ff",
+              strokeColor: "#0072d0",
               strokeWeight: 5,
             },
           }}

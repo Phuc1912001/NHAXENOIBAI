@@ -1,5 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MailKit.Security;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using MimeKit;
 using NhaXeNoiBai.Model.Entities;
+using NhaXeNoiBai.Model.Helper;
 using NhaXeNoiBai.Model.Model;
 using NhaXeNoiBai.Repository.Interfaces;
 using System;
@@ -13,9 +17,11 @@ namespace NhaXeNoiBai.Repository.Behaviours
     public class BookCarRespositoryService : IBookCarRespositoryService
     {
         private readonly TranportDBContext _context;
-        public BookCarRespositoryService( TranportDBContext context)
+        private readonly IEmailRepositoryService _emailRepositoryService;
+        public BookCarRespositoryService( TranportDBContext context, IEmailRepositoryService emailRepositoryService )
         {
             _context = context;
+            _emailRepositoryService = emailRepositoryService;
         }
 
         public async Task<BookCarEntity> CreateBookCar(BookCarEntity entity)
@@ -25,9 +31,15 @@ namespace NhaXeNoiBai.Repository.Behaviours
                 entity.Id = Guid.NewGuid();
             }
 
+            Mailrequest mailrequest = new Mailrequest();
+            mailrequest.ToEmail = "phucphuc1912001@gmail.com";
+            mailrequest.Subject = "chao nha";
+            mailrequest.Body = "Cam on em";
+
             entity.CreateAt = DateTime.Now;
             entity.UpdateAt = DateTime.Now;
             _context.BookCarEntities.Add(entity);
+            await _emailRepositoryService.SendEmailAsync(mailrequest);
             await _context.SaveChangesAsync();
 
             var result = await _context.BookCarEntities.FindAsync(entity.Id);
@@ -122,8 +134,62 @@ namespace NhaXeNoiBai.Repository.Behaviours
         }
 
 
-      
+        public async Task<List<BookCarOverviewModel>> BookCarOverView()
+        {
+            var listBookCar = _context.BookCarEntities.AsQueryable();
 
-       
+            // Get the current month and year
+            var currentMonth = DateTime.Now.Month;
+            var currentYear = DateTime.Now.Year;
+
+            // Create a list to store the overview data
+            var overviewData = new List<BookCarOverviewModel>();
+
+            // Define the range of months you want to display (current month and 8 months before)
+            for (int i = 0; i > -9; i--)
+            {
+                int month = currentMonth + i;
+                int year = currentYear;
+
+                // Adjust year if the month is outside the range of 1-12
+                if (month < 1)
+                {
+                    month += 12;
+                    year--;
+                }
+
+                // Calculate the number of BookCar entries for the current month and year
+                var count = await listBookCar
+                    .Where(b => b.StartTime.HasValue && b.StartTime.Value.Month == month && b.StartTime.Value.Year == year)
+                    .CountAsync();
+
+                // Add the result to the list with month and year formatted as "Month-Year"
+                overviewData.Add(new BookCarOverviewModel
+                {
+                    Value = count,
+                    Month = $"{month}-{year}"
+                });
+            }
+
+            // Sort the data so that the most recent month is at the bottom
+            overviewData = overviewData
+                .OrderBy(o => DateTime.ParseExact(o.Month, "M-yyyy", null))
+                .ToList();
+
+            return overviewData;
+        }
+
+        public async Task<List<CustomerBookCarModel>> GetCustomer()
+        {
+            var listCustomer = await _context.BookCarEntities.OrderByDescending(x => x.CreateAt).Select(item => new CustomerBookCarModel()
+            {
+                CustomerName = item.FullName,
+                Destination = item.Destination,
+                PhoneNumber = item.PhoneNumber
+            }).ToListAsync();
+
+            return listCustomer; 
+        }
+
     }
 }

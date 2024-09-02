@@ -19,4 +19,16 @@ declare namespace BookCar {
   export interface BookCarFilterModel {
     status?: number[];
   }
+
+  export interface BookCarOverViewModel {
+    value?: number;
+    month?: string;
+    listDate?: string[];
+  }
+
+  export interface CustomerBookCarModel {
+    customerName?: number;
+    destination?: string;
+    phoneNumber?: string[];
+  }
 }

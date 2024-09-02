@@ -1,7 +1,12 @@
 import React from "react";
+import DiscountList from "./DiscountList/DiscountList";
 
 const page = () => {
-  return <div>khuyen mai</div>;
+  return (
+    <div>
+      <DiscountList />
+    </div>
+  );
 };
 
 export default page;

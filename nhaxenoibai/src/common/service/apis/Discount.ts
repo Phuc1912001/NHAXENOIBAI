@@ -75,4 +75,16 @@ export const discount = {
       throw error;
     }
   },
+
+  async getDiscountOverview() {
+    try {
+      const response = await axiosInstance.get(
+        `/Discount/getDiscountOverViewModel`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("An error occurred while adding the account:", error);
+      throw error;
+    }
+  },
 };

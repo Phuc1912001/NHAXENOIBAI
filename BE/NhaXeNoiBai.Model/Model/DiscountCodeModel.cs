@@ -19,4 +19,11 @@ namespace NhaXeNoiBai.Model.Model
         public int? DiscountCodeMoney { get; set; }
         public int? Status { get; set; }
     }
+
+
+    public class DiscountCodeViewModel
+    {
+        public int? Value { get; set; }
+        public string? Status { get; set; }
+    }
 }

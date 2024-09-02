@@ -81,10 +81,26 @@ namespace NhaXeNoiBai.Controllers
             }
         }
 
+
         [HttpPost("finDiscountCode")]
         public async Task<BaseResponse<DiscountCodeModel>> FindDiscountCode(string title)
         {
             return await this.Handle(_logger, () => _discountCodeService.FindDiscountCode(title));
+        }
+
+        [HttpGet("GetDiscountCodeOverViewModel")]
+        public async Task<IActionResult> GetDiscountCodeOverViewModel()
+        {
+            try
+            {
+                var result = await _discountCodeService.GetDiscountCodeOverViewModel();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Lỗi khi lấy danh sách bộ book car.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Đã xảy ra lỗi khi xử lý yêu cầu.");
+            }
         }
 
     }

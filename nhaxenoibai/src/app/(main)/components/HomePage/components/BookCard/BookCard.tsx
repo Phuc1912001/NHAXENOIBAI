@@ -154,9 +154,7 @@ const BookCard = () => {
     try {
       showLoading("bookCar");
       const { result } = await service.bookCar.createBookCar(payload);
-      resetForm();
       setOpenModal(false);
-      setOriginValue(null);
       if (destination) {
         setDestinationValue({
           value: {
@@ -165,6 +163,8 @@ const BookCard = () => {
           label: destination.label,
         });
       }
+      handleChangeTab(TabBookCar.airport);
+      notification.success("Đặt xe thành công.");
       closeLoading("bookCar");
     } catch (error) {
       closeLoading("bookCar");
@@ -237,6 +237,8 @@ const BookCard = () => {
     setTotalAmount(0);
     setTwoWay(false);
     setSelectedDate(dayjs());
+    setIsOriginInvalid(false);
+    setIsDestinationInvalid(false);
     form.setFieldsValue({
       startDate: dayjs(),
       startTime: dayjs(),
@@ -245,12 +247,15 @@ const BookCard = () => {
       note: "",
     });
     setOrigin(null);
+    setOriginValue(null);
     setDestination(null);
     setDistance(0);
     setDuration("");
     setTotalAmount(0);
     setTotalMoney(0);
     setDiscountMoney(0);
+    setShowNote(false);
+    setShowDiscountCode(false);
   };
   const handleChangeTab = (tab: number) => {
     setActiveTab(tab);
@@ -328,7 +333,9 @@ const BookCard = () => {
       setIsDestinationInvalid(false);
     }
     await form.validateFields();
-    setOpenModal(true);
+    if (!isOriginInvalid && !isDestinationInvalid) {
+      setOpenModal(true);
+    }
   };
 
   return (
@@ -377,7 +384,7 @@ const BookCard = () => {
             <Col xs={24} lg={12}>
               <div className={styles.wrapperDuration}>
                 <div>Trong Khoảng: </div>
-                <div>{duration ?? "0 giờ"}</div>
+                <div>{duration ? duration : "0 giờ"}</div>
               </div>
             </Col>
             <Col xs={24} lg={12}>
@@ -559,9 +566,14 @@ const BookCard = () => {
                 <Form.Item name="discountCode" label="Mã giảm giá :">
                   <Space.Compact style={{ width: "100%" }}>
                     <Input placeholder="Nhập mã giảm giá" />
-                    <Button onClick={handleConfirmDiscountCode} type="primary">
-                      Xác nhận
-                    </Button>
+                    <div className={styles.btnConfirm}>
+                      <Button
+                        onClick={handleConfirmDiscountCode}
+                        type="primary"
+                      >
+                        Xác nhận
+                      </Button>
+                    </div>
                   </Space.Compact>
                 </Form.Item>
               </Col>
@@ -590,7 +602,9 @@ const BookCard = () => {
 
           <div className={styles.wrapperTotalMoney}>
             <div>Đơn giá:</div>
-            <div>{totalMoney.toLocaleString("vi-VN")} đ</div>
+            <div>
+              {totalMoney > 0 ? totalMoney.toLocaleString("vi-VN") : 0} đ{" "}
+            </div>
           </div>
 
           <div className={styles.wrapperBookCar}>
@@ -617,6 +631,8 @@ const BookCard = () => {
         valueForm={form.getFieldsValue()}
         twoWay={twoWay}
         totalMoney={totalMoney}
+        totalAmount={totalAmount}
+        discountMoney={discountMoney}
       />
     </Spin>
   );

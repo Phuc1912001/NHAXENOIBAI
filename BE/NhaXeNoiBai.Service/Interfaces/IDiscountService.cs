@@ -22,6 +22,7 @@ namespace NhaXeNoiBai.Service.Interfaces
         Task UpdateExpiredDiscountAsync();
         Task<DiscountChartModel> GetDiscountChart();
 
+        Task<List<DiscountCodeViewModel>> GetDiscountOverViewModel();
 
     }
 }

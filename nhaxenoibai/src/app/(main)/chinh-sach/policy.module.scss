@@ -1,0 +1,23 @@
+.wrapperPolicy {
+  @include media-breakpoint-up(lg) {
+    padding: 0 70px 0px 70px;
+  }
+
+  .titlePolicy {
+    color: #0072d0;
+    font-size: 20px;
+    font-weight: 600;
+  }
+  .secondTitle {
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+  .titleItem {
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+}

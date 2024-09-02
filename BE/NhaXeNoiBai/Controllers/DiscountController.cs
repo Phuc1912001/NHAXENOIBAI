@@ -89,5 +89,21 @@ namespace NhaXeNoiBai.Controllers
             }
         }
 
+
+        [HttpGet("getDiscountOverViewModel")]
+        public async Task<IActionResult> GetDiscountOverViewModel()
+        {
+            try
+            {
+                var result = await _discountService.GetDiscountOverViewModel();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Lỗi khi lấy danh sách bộ book car.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Đã xảy ra lỗi khi xử lý yêu cầu.");
+            }
+        }
+
     }
 }

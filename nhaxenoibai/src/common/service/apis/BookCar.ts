@@ -51,4 +51,24 @@ export const bookCar = {
       throw error;
     }
   },
+
+  async getBookCarOverview() {
+    try {
+      const response = await axiosInstance.get(`/BookCar/getBookCarOverview`);
+      return response.data;
+    } catch (error) {
+      console.error("An error occurred while adding the account:", error);
+      throw error;
+    }
+  },
+
+  async getCustomer() {
+    try {
+      const response = await axiosInstance.get(`/BookCar/getCustomer`);
+      return response.data;
+    } catch (error) {
+      console.error("An error occurred while adding the account:", error);
+      throw error;
+    }
+  },
 };

@@ -21,4 +21,10 @@ declare namespace DiscountCode {
     status: number[];
     moneyFilters: MoneyFilterOptionModel[];
   }
+
+  export interface DiscountCodeOverViewModel {
+    value?: number;
+    status?: string;
+    listStatus?: string[];
+  }
 }

@@ -9,6 +9,7 @@ using AutoMapper;
 using NhaXeNoiBai.Model.Mapper;
 using Amazon.S3;
 using NhaXeNoiBai.Controllers;
+using NhaXeNoiBai.Model.Helper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,10 @@ builder.Services.AddDbContext<TranportDBContext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("TransportDataBase"));
 });
+
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddTransient<IEmailRepositoryService, EmailRepositoryServcie>();
+
 builder.Services.AddScoped<IPriceService, PriceService>();
 builder.Services.AddScoped<IPriceRepositoryService, PriceRepositoryService>();
 builder.Services.AddScoped<IDoccumentService, DoccumentService>();   

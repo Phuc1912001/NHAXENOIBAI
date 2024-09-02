@@ -163,7 +163,7 @@ namespace NhaXeNoiBai.Repository.Behaviours
                 }
             }
 
-            var listDiscount = await query.OrderByDescending(x => x.CreateAt)
+            var listDiscount = await query.OrderByDescending(x => x.StartTime)
                                           .Skip(model.PageInfo.PageSize * (model.PageInfo.PageNo - 1))
                                           .Take(model.PageInfo.PageSize)
                                           .ToListAsync();
@@ -290,6 +290,22 @@ namespace NhaXeNoiBai.Repository.Behaviours
                 default:
                     return "Trạng thái không xác định";
             }
+        }
+
+        public async Task<List<DiscountCodeViewModel>> GetDiscountOverViewModel()
+        {
+            var discountEntities = await _context.DiscountEntities.ToListAsync();
+
+            var discountOverview = discountEntities
+                                        .GroupBy(item => item.Status)
+                                        .Select(group => new DiscountCodeViewModel
+                                        {
+                                            Value = group.Count(),
+                                            Status = RenderStatus(group.Key)
+                                        })
+                                        .ToList();
+
+            return discountOverview;
         }
     }
 }

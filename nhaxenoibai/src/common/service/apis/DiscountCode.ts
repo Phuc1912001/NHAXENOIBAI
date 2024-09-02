@@ -87,4 +87,16 @@ export const discountCode = {
       throw error;
     }
   },
+
+  async getDiscountCodeOverview() {
+    try {
+      const response = await axiosInstance.get(
+        `/DiscountCode/GetDiscountCodeOverViewModel`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("An error occurred while adding the account:", error);
+      throw error;
+    }
+  },
 };

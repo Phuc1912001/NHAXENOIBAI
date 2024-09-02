@@ -53,5 +53,37 @@ namespace NhaXeNoiBai.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Đã xảy ra lỗi khi xử lý yêu cầu.");
             }
         }
+
+        [HttpGet("getCustomer")]
+        public async Task<IActionResult> GetCustomer()
+        {
+            try
+            {
+                var result = await _bookCarService.GetCustomer();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Lỗi khi lấy danh sách bộ book car.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Đã xảy ra lỗi khi xử lý yêu cầu.");
+            }
+        }
+
+
+
+        [HttpGet("getBookCarOverView")]
+        public async Task<IActionResult> BookCarOverView()
+        {
+            try
+            {
+                var result = await _bookCarService.BookCarOverView();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Lỗi khi lấy danh sách bộ book car.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Đã xảy ra lỗi khi xử lý yêu cầu.");
+            }
+        }
     }
 }

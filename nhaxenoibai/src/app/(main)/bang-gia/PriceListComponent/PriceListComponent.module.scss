@@ -1,0 +1,27 @@
+.wrapperPriceList {
+  @include media-breakpoint-up(lg) {
+    padding: 0 70px 0px 70px;
+  }
+  .titlePriceList {
+    color: #0072d0;
+    font-size: 20px;
+    font-weight: 600;
+  }
+  .secondTitle {
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .wrapperDesc {
+    font-style: italic;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    text-align: center;
+    span {
+      color: #0072d0;
+    }
+  }
+}

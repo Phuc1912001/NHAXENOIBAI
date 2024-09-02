@@ -23,6 +23,7 @@ namespace NhaXeNoiBai.Repository.Interfaces
         Task<bool> DeleteDiscount(Guid id);
 
         Task<DiscountChartModel> GetDiscountChart();
+        Task<List<DiscountCodeViewModel>> GetDiscountOverViewModel();
 
     }
 }
