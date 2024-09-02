@@ -14,6 +14,8 @@ namespace NhaXeNoiBai.Service.Interfaces
         Task<BookCarModel> UpdateBookCar(BookCarEntity entity);
         Task<bool> DeleteBookCar(Guid id);
         Task<BookCarFilterModel> GetBookCarFilter();
+        Task<List<CustomerBookCarModel>> GetCustomer();
 
+        Task<List<BookCarOverviewModel>> BookCarOverView();
     }
 }

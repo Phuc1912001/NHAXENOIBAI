@@ -114,6 +114,12 @@ namespace NhaXeNoiBai.Service.Behaviours
             var discountModel = await _discountCodeRepositoryService.FindDiscountCode(title);
             return discountModel;
         }
+
+        public async Task<List<DiscountCodeViewModel>> GetDiscountCodeOverViewModel()
+        {
+            var result = await _discountCodeRepositoryService.GetDiscountCodeOverViewModel();
+            return result;
+        }
     }
 
    

@@ -1,0 +1,26 @@
+.wrapperPeopleReview {
+  @include media-breakpoint-up(lg) {
+    padding: 0 70px 0px 70px;
+  }
+  margin-top: 16px;
+  margin-bottom: 16px;
+
+  .textTitle {
+    color: #0072d0;
+    font-size: 18px;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid gray;
+    font-weight: 600;
+  }
+  .containerCustomer {
+    display: flex;
+    align-items: center;
+    min-height: 55px;
+    border: 1px dashed #0072d0;
+    padding: 5px;
+    margin-bottom: 10px;
+    .wrapperCustomer {
+    }
+  }
+}

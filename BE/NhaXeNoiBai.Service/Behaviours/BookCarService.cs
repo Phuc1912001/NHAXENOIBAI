@@ -24,6 +24,12 @@ namespace NhaXeNoiBai.Service.Behaviours
             _mapper = mapper;
         }
 
+        public async Task<List<BookCarOverviewModel>> BookCarOverView()
+        {
+            var result = await _bookCarRespositoryService.BookCarOverView();
+            return result;
+        }
+
         public async Task<BookCarModel> CreateBookCar(BookCarModel bookCar)
         {
             var bookCarEntity = _mapper.Map<BookCarEntity>(bookCar);
@@ -42,6 +48,12 @@ namespace NhaXeNoiBai.Service.Behaviours
         public async Task<BookCarFilterModel> GetBookCarFilter()
         {
             var result = await _bookCarRespositoryService.GetBookCarFilter();
+            return result;
+        }
+
+        public async Task<List<CustomerBookCarModel>> GetCustomer()
+        {
+            var result = await _bookCarRespositoryService.GetCustomer();
             return result;
         }
 

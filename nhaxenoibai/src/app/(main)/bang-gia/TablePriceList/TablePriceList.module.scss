@@ -1,0 +1,18 @@
+.pcTable {
+  display: none;
+  @include media-breakpoint-up(lg) {
+    display: block;
+  }
+}
+
+.mobileTable {
+  display: block;
+  @include media-breakpoint-up(lg) {
+    display: none;
+  }
+}
+
+.typeBanding {
+  color: #0072d0;
+  font-weight: 600;
+}

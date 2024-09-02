@@ -1,22 +1,22 @@
 .formWrapper {
-  //   border: 1px solid black;
   padding: 10px;
   border-radius: 6px;
-  //   background-color: #f5f5f5;
   border: 1px solid #b8b8b8;
+  background-color: #fff;
+  box-shadow: 0 0 8px #363e4a0f;
 
   .wrapperHeader {
     display: flex;
     align-items: center;
     gap: 15px;
     .titleOrderCar {
-      color: #00aaff;
+      color: #0072d0;
       font-size: 24px;
       font-weight: 700;
     }
 
     .tabActive {
-      background-color: #00aaff;
+      background-color: #0072d0;
       height: 28px;
       width: 80px;
       display: flex;
@@ -39,7 +39,7 @@
       font-weight: 600;
       cursor: pointer;
       &:hover {
-        background-color: #00aaff;
+        background-color: #0072d0;
         color: #fff;
       }
     }
@@ -68,7 +68,7 @@
   }
 
   .swapContainer {
-    @include media-breakpoint-up(md) {
+    @include media-breakpoint-up(lg) {
       margin-top: 31.53px;
     }
     .wrapperTwoWay {
@@ -79,11 +79,11 @@
   }
 
   .textNote {
-    color: #00aaff;
+    color: #0072d0;
     font-weight: 600;
     cursor: pointer;
     &:hover {
-      color: #0a63e1;
+      color: #3ea8ff;
     }
   }
 
@@ -129,6 +129,7 @@
     margin-top: 6px;
     .btnBookCar {
       width: 100%;
+      height: 42px;
       color: white;
       font-size: 18px;
       font-weight: 600;
@@ -136,6 +137,7 @@
       align-items: center;
       justify-content: center;
       transition: background-color 0.3s ease;
+      background-color: #0072d0;
     }
 
     .btnBookCar .ant-btn-icon {
@@ -146,4 +148,12 @@
       transform: translateX(1cm);
     }
   }
+}
+
+.btnConfirm > button {
+  background-color: #0072d0;
+}
+
+.wrapperTwoWay > button {
+  // background-color: #0072d0;
 }

@@ -1,16 +1,159 @@
 .wrapperTitle {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
 }
+
 .wrapperButton {
   display: flex;
   align-items: center;
-  justify-content: end;
-  gap: 8px;
+  justify-content: flex-end;
+  gap: 12px;
 }
+
+.submitBtn > button {
+  height: 42px;
+  padding: 0 28px;
+  font-size: 16px;
+  border-radius: 6px;
+  background-color: #0072d0;
+  border: none;
+  color: white;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #005bb5;
+  }
+}
+
+.cancelBtn > button {
+  height: 42px;
+  padding: 0 28px;
+  font-size: 16px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
 .wrapperContent {
   border-top: 1px solid #ebeef5;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding: 16px 0;
+}
+
+.title {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.wrapperOrigin {
+  gap: 10px;
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  background-color: #f5f7fa;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #555;
+}
+
+.wrapperOrigin .title {
+  font-size: 14px;
+  color: #555;
+}
+
+.wrapperDuration {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  background-color: #f5f7fa;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #555;
+}
+
+.wrapperDuration .title {
+  font-size: 14px;
+  color: #555;
+}
+
+.wrapperNote {
+  display: flex;
+  align-items: start;
+  gap: 10px;
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  background-color: #f5f7fa;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #555;
+}
+
+.wrapperNote .title {
+  font-size: 14px;
+  color: #555;
+}
+
+.wrapperTime {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.creatLogModal {
+  .logModal {
+    max-height: 450px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 5px;
+  }
+}
+
+@include media-breakpoint-down(md) {
+  .creatLogModal {
+    :global {
+      .ant-modal .ant-modal-content {
+        padding-right: 8px !important;
+      }
+      .logModal {
+        padding-right: 10px;
+      }
+      .ant-upload-wrapper {
+        .ant-upload-list {
+          margin-right: -8px;
+        }
+      }
+    }
+  }
+}
+
+.wrapperPayment {
+  border-top: 1px solid rgb(214, 213, 213);
+  .wrapperTotalAmount {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 5px;
+
+    .textTotalAmount {
+      text-decoration: line-through;
+      color: gray;
+    }
+  }
+
+  .wrapperDiscountCode {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .wrapperTotalMoney {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 18px;
+    font-weight: 700;
+  }
 }

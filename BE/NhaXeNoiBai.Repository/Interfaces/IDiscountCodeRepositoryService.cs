@@ -23,5 +23,6 @@ namespace NhaXeNoiBai.Repository.Interfaces
         Task UpdateDiscountCodeAsync(DiscountCodeEntity discountCode);
 
         Task<DiscountChartModel> GetDiscountCodeChart();
+        Task<List<DiscountCodeViewModel>> GetDiscountCodeOverViewModel();
     }
 }

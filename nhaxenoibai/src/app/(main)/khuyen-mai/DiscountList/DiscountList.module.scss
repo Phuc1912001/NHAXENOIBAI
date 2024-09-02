@@ -1,0 +1,11 @@
+.wrapperDiscountList {
+  @include media-breakpoint-up(lg) {
+    padding: 0 70px 0px 70px;
+  }
+  .titleDiscountList {
+    color: #0072d0;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+}

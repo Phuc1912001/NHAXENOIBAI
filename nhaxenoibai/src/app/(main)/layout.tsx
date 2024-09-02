@@ -2,6 +2,7 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import DefaultLayout from "./DefaultLayout";
+import "@/common/scss/index.scss";
 import "./globals.css";
 import { ConfigProvider } from "antd";
 const outfit = Outfit({ subsets: ["latin"] });

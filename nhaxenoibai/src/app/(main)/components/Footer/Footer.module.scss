@@ -1,0 +1,27 @@
+.wrapperFooter {
+  background-color: #0072d0;
+  height: 300px;
+  color: #fff;
+
+  @include media-breakpoint-up(lg) {
+    padding: 0 70px 0px 70px;
+  }
+  .wrapperContent {
+    padding: 12px;
+  }
+
+  .footerTitle {
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .desc {
+    margin-bottom: 20px;
+  }
+
+  .infoCompany {
+    font-size: 16px;
+  }
+  .infoWeb {
+    font-size: 16px;
+  }
+}

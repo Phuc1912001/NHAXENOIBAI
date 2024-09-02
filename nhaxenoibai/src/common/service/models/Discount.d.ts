@@ -16,4 +16,10 @@ declare namespace Discount {
     imageSrc?: string;
     keyImage?: string;
   }
+
+  export interface DiscountOverViewModel {
+    value?: number;
+    status?: string;
+    listStatus?: string[];
+  }
 }

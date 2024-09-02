@@ -34,7 +34,7 @@ export interface ITableSection<T> {
 export interface ITable<T> {
   list: T[];
   tableSection: ITableSection<T>;
-  pagination: A;
+  pagination?: A;
 }
 
 const TableMobile = <T,>(props: ITable<T>) => {

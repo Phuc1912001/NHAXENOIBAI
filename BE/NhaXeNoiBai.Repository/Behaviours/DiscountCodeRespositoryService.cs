@@ -264,6 +264,14 @@ namespace NhaXeNoiBai.Repository.Behaviours
             {
                 throw new DiscountException("Mã giảm giá này không tồn tại.");
             }
+            else if (discountCodeEntity.Status == (int)DiscountCodeStatusEnum.Expired)
+            {
+                throw new DiscountException("Mã giảm giá này đã hết hạn.");
+            }
+            else if (discountCodeEntity.Status == (int)DiscountCodeStatusEnum.PendingActive)
+            {
+                throw new DiscountException("Mã giảm giá này chưa bắt đầu.");
+            }
 
             var discountCodeModel = new DiscountCodeModel
             {
@@ -282,6 +290,24 @@ namespace NhaXeNoiBai.Repository.Behaviours
 
             return discountCodeModel;
         }
+
+        public async Task<List<DiscountCodeViewModel>> GetDiscountCodeOverViewModel()
+        {
+            var discountCodeEntities = await _context.DiscountCodeEntities.ToListAsync();
+
+            var discountCodeOverview = discountCodeEntities
+                                        .GroupBy(item => item.Status)
+                                        .Select(group => new DiscountCodeViewModel
+                                        {
+                                            Value = group.Count(),
+                                            Status = RenderStatus(group.Key)
+                                        })
+                                        .ToList();
+
+            return discountCodeOverview;
+        }
+
+
 
     }
 }

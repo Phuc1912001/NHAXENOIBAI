@@ -31,7 +31,7 @@ namespace NhaXeNoiBai.Repository.Behaviours
                     query = query.Where(x => x.CarType != null && x.CarType.Contains(searchItem));
                 }
             }
-            var listPrice = await query.OrderByDescending(x => x.FromHanoiToNoiBai)
+            var listPrice = await query.OrderBy(x => x.FromHanoiToNoiBai)
                                           .Skip(model.PageInfo.PageSize * (model.PageInfo.PageNo - 1))
                                           .Take(model.PageInfo.PageSize)
                                           .ToListAsync();
